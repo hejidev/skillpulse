@@ -49,6 +49,10 @@
 }
 
 :root {
+  --bg: #0b0f19;
+  --panel: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #22c55e;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -127,4 +131,66 @@
   html {
     @apply font-sans;
   }
+}
+
+/* Heatmap colors (GitHub style) */
+
+.color-empty {
+  fill: #1f1f1f;
+}
+
+.color-scale-1 {
+  fill: #14532d;
+}
+
+.color-scale-2 {
+  fill: #166534;
+}
+
+.color-scale-3 {
+  fill: #22c55e;
+}
+
+.color-scale-4 {
+  fill: #4ade80;
+}
+
+body {
+  background: var(--bg);
+  color: white;
+  font-family: var(--font-sans);
+}
+
+.glass {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+
+.card-hover {
+  transition: all 0.25s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.react-calendar-heatmap .color-scale-1 { fill: #1f2937; }
+.react-calendar-heatmap .color-scale-2 { fill: #22c55e80; }
+.react-calendar-heatmap .color-scale-3 { fill: #22c55eaa; }
+.react-calendar-heatmap .color-scale-4 { fill: #22c55e; }
+.react-calendar-heatmap .color-empty { fill: #0f172a; }
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite linear;
 }
