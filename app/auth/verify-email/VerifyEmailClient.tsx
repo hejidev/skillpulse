@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import API from "@/lib/api";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export default function VerifyEmailClient({ token }: { token: string }) {
+export default function VerifyEmailClient() {
+  const params = useSearchParams();
   const router = useRouter();
+
+  const token = params.get("token");
 
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("");
