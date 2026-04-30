@@ -1,10 +1,9 @@
-import { Suspense } from "react";
 import VerifyEmailClient from "./VerifyEmailClient";
 
-export default function Page() {
-  return (
-    <Suspense fallback={<div className="p-10 text-center">Verifying...</div>}>
-      <VerifyEmailClient />
-    </Suspense>
-  );
+export default function Page({
+  searchParams,
+}: {
+  searchParams: { token?: string };
+}) {
+  return <VerifyEmailClient token={searchParams.token || ""} />;
 }
