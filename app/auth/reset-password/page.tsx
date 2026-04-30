@@ -23,6 +23,43 @@ export default function ResetPasswordPage() {
 
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
+    useEffect(() => {
+      if (otp.join("").length === 6) {
+        handleReset();
+      }
+    }, [otp]);
+
+    const handleReset = async () => {
+    if (loading) return;
+
+    const finalOtp = otp.join("");
+
+    if (finalOtp.length < 6) {
+      return toast.error("Enter complete OTP");
+    }
+
+    setLoading(true);
+
+    if (!email) {
+      return toast.error("Invalid reset link");
+    }
+
+    try {
+      await API.post("/auth/verify-otp", {
+        email,
+        otp: finalOtp,
+        newPassword: password,
+      });
+
+      toast.success("Password reset successful 🚀");
+      router.push("/auth/login");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleChange = (value: string, index: number) => {
     if (!/^\d?$/.test(value)) return;
 
@@ -58,43 +95,6 @@ export default function ResetPasswordPage() {
     });
 
     inputsRef.current[5]?.focus();
-  };
-
-  const handleReset = async () => {
-    if (loading) return;
-
-    const finalOtp = otp.join("");
-
-    if (finalOtp.length < 6) {
-      return toast.error("Enter complete OTP");
-    }
-
-    useEffect(() => {
-      if (otp.join("").length === 6) {
-        handleReset();
-      }
-    }, [otp]);
-
-    setLoading(true);
-
-    if (!email) {
-      return toast.error("Invalid reset link");
-    }
-
-    try {
-      await API.post("/auth/verify-otp", {
-        email,
-        otp: finalOtp,
-        newPassword: password,
-      });
-
-      toast.success("Password reset successful 🚀");
-      router.push("/auth/login");
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed");
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
