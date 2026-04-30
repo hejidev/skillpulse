@@ -1,8 +1,9 @@
 "use client";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import API from "@/lib/api";
 import { Card } from "@/components/ui/card";
@@ -22,7 +23,6 @@ export default function ResetPasswordPage() {
 
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
-  // 🔢 HANDLE INPUT CHANGE
   const handleChange = (value: string, index: number) => {
     if (!/^\d?$/.test(value)) return;
 
@@ -43,7 +43,6 @@ export default function ResetPasswordPage() {
     }
   };
 
-  // 📋 HANDLE PASTE (very premium UX)
   const handlePaste = (e: React.ClipboardEvent) => {
     const paste = e.clipboardData.getData("text").slice(0, 6);
 
@@ -70,7 +69,17 @@ export default function ResetPasswordPage() {
       return toast.error("Enter complete OTP");
     }
 
+    useEffect(() => {
+      if (otp.join("").length === 6) {
+        handleReset();
+      }
+    }, [otp]);
+
     setLoading(true);
+
+    if (!email) {
+      return toast.error("Invalid reset link");
+    }
 
     try {
       await API.post("/auth/verify-otp", {
