@@ -17,4 +17,20 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
+// ✅ RESPONSE INTERCEPTOR (handle 401 globally)
+API.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response?.status === 401) {
+      // 🔥 Token expired or invalid
+      localStorage.clear();
+
+      // redirect user to login
+      window.location.href = "/auth/login";
+    }
+
+    return Promise.reject(err);
+  }
+);
+
 export default API;

@@ -1,71 +1,104 @@
 "use client";
 
-import { useQuery, useMutation } from "@tanstack/react-query";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+
+import { Bell, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import API from "@/lib/api";
-import { Bell } from "lucide-react";
-import { useState } from "react";
 
 export default function NotificationBell() {
-  const [open, setOpen] = useState(false);
+  const [data, setData] = useState<any[]>([]);
 
-  const { data = [], refetch } = useQuery({
-    queryKey: ["notifications"],
-    queryFn: async () => {
-      const res = await API.get("/settings/notifications");
-      return res.data;
-    },
-  });
+  const fetchData = async () => {
+    const res = await API.get("/settings/notifications");
+    setData(res.data);
+  };
 
-  const markRead = useMutation({
-    mutationFn: async () => {
-      await API.put("/settings/notifications/read");
-    },
-    onSuccess: () => refetch(),
-  });
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  const unread = data.filter((n: any) => !n.read).length;
+  const unread = data.filter((n) => !n.read).length;
+
+  const markRead = async (id: string) => {
+    await API.put(`/settings/notifications/${id}/read`);
+    fetchData();
+  };
+
+  const archive = async (id: string) => {
+    await API.put(`/settings/notifications/${id}/archive`);
+    fetchData();
+  };
 
   return (
-    <div className="relative">
-      
-      {/* 🔔 ICON */}
-      <button onClick={() => setOpen(!open)} className="relative">
-        <Bell />
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="relative">
+          <Bell />
 
-        {unread > 0 && (
-          <span className="absolute -top-1 right-1 bg-red-500 text-xs px-1 rounded-full">
-            {unread}
-          </span>
-        )}
-      </button>
+          {unread > 0 && (
+            <Badge className="absolute -top-1 -right-1 text-xs">
+              {unread}
+            </Badge>
+          )}
+        </Button>
+      </DropdownMenuTrigger>
 
-      {/* 📦 DROPDOWN */}
-      {open && (
-        <div className="absolute left-0 mt-2 w-80 bg-black border rounded-lg p-4 space-y-3">
-          
-          <div className="flex justify-between">
-            <h3>Notifications</h3>
-            <button onClick={() => markRead.mutate()}>
-              Mark all read
-            </button>
-          </div>
+      <DropdownMenuContent className="w-96 p-0">
+        <div className="p-3 font-semibold">Notifications</div>
+        <Separator />
 
+        <ScrollArea className="h-80">
           {data.length === 0 ? (
-            <p>No notifications</p>
+            <p className="p-4 text-sm text-muted-foreground">
+              No notifications
+            </p>
           ) : (
-            data.map((n: any, i: number) => (
+            data.map((n) => (
               <div
-                key={i}
-                className={`p-2 rounded ${
-                  n.read ? "opacity-50" : "bg-white/10"
-                }`}
+                key={n._id}
+                className="p-3 flex justify-between hover:bg-muted/50"
               >
-                {n.message}
+                <div>
+                  <p className="text-sm">{n.message}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(n.createdAt).toLocaleString()}
+                  </p>
+                </div>
+
+                <div className="flex gap-2">
+                  {!n.read && (
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => markRead(n._id)}
+                    >
+                      ✓
+                    </Button>
+                  )}
+
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => archive(n._id)}
+                  >
+                    <Trash2 className="w-4 h-4 text-red-500" />
+                  </Button>
+                </div>
               </div>
             ))
           )}
-        </div>
-      )}
-    </div>
+        </ScrollArea>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

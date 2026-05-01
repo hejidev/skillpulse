@@ -1,24 +1,59 @@
-import { useEffect } from "react";
-import { differenceInDays } from "date-fns";
+"use client";
+
+import { useEffect, useState } from "react";
+import API from "@/lib/api";
 import { toast } from "sonner";
 
-export function useSmartNotifications(data: any[]) {
-  useEffect(() => {
-    if (!data.length) return;
+export function useNotifications() {
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [unread, setUnread] = useState(0);
 
-    const lastEntry = data[data.length - 1];
+  const fetchNotifications = async () => {
+    try {
+      const res = await API.get("/settings/notifications");
+      setNotifications(res.data);
 
-    const daysAway = differenceInDays(
-      new Date(),
-      new Date(lastEntry.createdAt)
+      const unreadCount = res.data.filter((n: any) => !n.read).length;
+      setUnread(unreadCount);
+    } catch (err) {
+      toast.error("Failed to load notifications");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteNotification = async (id: string) => {
+    await API.delete(`/settings/notifications/${id}`);
+    setNotifications((prev) => prev.filter((n) => n._id !== id));
+  };
+
+  const clearAll = async () => {
+    await API.delete("/settings/notifications/clear-all");
+    setNotifications([]);
+    setUnread(0);
+  };
+
+  const markAllRead = async () => {
+    await API.put("/settings/notifications/read");
+    setNotifications((prev) =>
+      prev.map((n) => ({ ...n, read: true }))
     );
+    setUnread(0);
+  };
 
-    if (daysAway === 1) {
-      toast("👀 You missed yesterday. Log progress today!");
-    }
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
-    if (daysAway >= 3) {
-      toast.error("⚠️ You’re losing momentum!");
-    }
-  }, [data]);
+  return {
+    notifications,
+    loading,
+    unread,
+    refetch: fetchNotifications,
+    deleteNotification,
+    clearAll,
+    markAllRead,
+    setNotifications,
+  };
 }

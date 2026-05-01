@@ -10,15 +10,56 @@ import {
   NavigationMenuItem,
 } from "@/components/ui/navigation-menu";
 import { Bell, Menu } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import UserDropdown from "./UserDropdown";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
+import API from "@/lib/api";
 
 export default function Navbar() {
   const { user, loading } = useAuthContext();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const socketRef = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    // 🚫 DO NOT RUN IF USER NOT READY
+    if (!user) return;
+
+    // ✅ SOCKET
+    socketRef.current = io(process.env.NEXT_PUBLIC_SOCKET_URL as string);
+
+    const userId = localStorage.getItem("userId");
+
+    if (userId) {
+      socketRef.current.emit("register", userId);
+    }
+
+    socketRef.current.on("notification", (data: any) => {
+      toast.success(data.message);
+      setUnreadCount((prev) => prev + 1);
+    });
+
+    // ✅ FETCH UNREAD (SAFE NOW)
+    const fetchUnread = async () => {
+      try {
+        const res = await API.get("/settings/notifications");
+
+        const unread = res.data.filter((n: any) => !n.read).length;
+        setUnreadCount(unread);
+      } catch (err) {
+        console.error("Unread count error:", err);
+      }
+    };
+
+    fetchUnread();
+
+    return () => {
+      socketRef.current?.disconnect();
+    };
+  }, [user]); // ✅ DEPEND ON USER
 
   if (loading) return null;
   if (user?.role === "admin") return null;
@@ -30,29 +71,10 @@ export default function Navbar() {
     return `Hi ${user.name.split(" ")[0]} 👋`;
   };
 
- 
-
-const socket = io("https://skillpulse.onrender.com");
-
-useEffect(() => {
-  const userId = localStorage.getItem("userId");
-
-  socket.emit("register", userId);
-
-  socket.on("notification", (data) => {
-    toast.success(data.message);
-  });
-
-  return () => {
-    socket.disconnect();
-  };
-}, []);
-
   return (
     <header className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
 
-        {/* 🔷 Logo */}
         <Link
           href="/"
           className="text-xl font-bold bg-linear-to-r from-purple-400 to-green-400 bg-clip-text text-transparent"
@@ -60,28 +82,18 @@ useEffect(() => {
           SkillPulse
         </Link>
 
-        {/* 🔷 Desktop Nav */}
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList className="flex gap-6 text-sm">
 
             {!user ? (
               <>
                 <NavigationMenuItem>
-                  <Link
-                    href="#features"
-                    className={`transition ${isActive("#features") ? "text-white" : "text-gray-400"
-                      }`}
-                  >
+                  <Link href="#features" className="text-gray-400">
                     Features
                   </Link>
                 </NavigationMenuItem>
-
                 <NavigationMenuItem>
-                  <Link
-                    href="#how"
-                    className={`transition ${isActive("#how") ? "text-white" : "text-gray-400"
-                      }`}
-                  >
+                  <Link href="#how" className="text-gray-400">
                     How it Works
                   </Link>
                 </NavigationMenuItem>
@@ -89,45 +101,16 @@ useEffect(() => {
             ) : (
               <>
                 <NavigationMenuItem>
-                  <Link
-                    href="/dashboard"
-                    className={`transition ${isActive("/dashboard") ? "text-white" : "text-gray-400"
-                      }`}
-                  >
-                    Dashboard
-                  </Link>
+                  <Link href="/dashboard">Dashboard</Link>
                 </NavigationMenuItem>
-
                 <NavigationMenuItem>
-                  <Link
-                    href="/"
-                    className={`transition ${isActive("/skills") ? "text-white" : "text-gray-400"
-                      }`}
-                  >
-                    About Us
-                  </Link>
+                  <Link href="/">About Us</Link>
                 </NavigationMenuItem>
-
                 <NavigationMenuItem>
-                  <Link
-                    href="/"
-                    className={`transition ${isActive("/progress") ? "text-white" : "text-gray-400"
-                      }`}
-                  >
-                    Contact
-                  </Link>
-
+                  <Link href="/">Contact</Link>
                 </NavigationMenuItem>
-
                 <NavigationMenuItem>
-                  <Link
-                    href="/"
-                    className={`transition ${isActive("/leaderboard") ? "text-white" : "text-gray-400"
-                      }`}
-                  >
-                    Blogs
-                  </Link>
-
+                  <Link href="/">Blogs</Link>
                 </NavigationMenuItem>
               </>
             )}
@@ -139,33 +122,30 @@ useEffect(() => {
           {!user ? (
             <>
               <Link href="/auth/login">
-                <Button variant="ghost" className="text-gray-300">
-                  Login
-                </Button>
+                <Button variant="ghost">Login</Button>
               </Link>
-
               <Link href="/auth/signup">
-                <Button className="bg-green-500 text-black hover:bg-green-600">
+                <Button className="bg-green-500 text-black">
                   Get Started
                 </Button>
               </Link>
-
-              {/* <button
-                onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true }))}
-                className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 text-sm text-gray-400 hover:text-white"
-              >
-                ⌘K
-              </button> */}
             </>
           ) : (
             <>
-              {/* 🔔 Notifications */}
-              <Link href="/notification" className="relative p-2 rounded-lg hover:bg-white/10">
+              {/* 🔔 NOTIFICATION */}
+              <Link
+                href="/notification"
+                className="relative p-2 rounded-lg hover:bg-white/10"
+              >
                 <Bell size={18} />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full" />
+
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-green-500 text-black text-[10px] px-1.5 rounded-full">
+                    {unreadCount}
+                  </span>
+                )}
               </Link>
 
-              {/* 🧠 Greeting */}
               <span className="hidden md:block text-sm text-gray-300">
                 {getGreeting()}
               </span>
@@ -174,7 +154,6 @@ useEffect(() => {
             </>
           )}
 
-          {/* 📱 Mobile Menu Button */}
           <button
             className="md:hidden p-2"
             onClick={() => setOpen(!open)}
@@ -183,41 +162,6 @@ useEffect(() => {
           </button>
         </div>
       </div>
-
-      {/* 📱 Mobile Menu */}
-      {open && (
-        <div className="md:hidden px-6 pb-4 bg-black border-t border-white/10">
-          <div className="flex flex-col gap-4 text-gray-300">
-
-            {!user ? (
-              <>
-                <Link href="#features">Features</Link>
-                <Link href="#how">How it Works</Link>
-                <Link href="/auth/login">Login</Link>
-                <Link href="/signup">Get Started</Link>
-              </>
-            ) : (
-              <>
-                <Link href="/dashboard">Dashboard</Link>
-                <Link href="/">About Us</Link>
-                <Link href="/">Contact</Link>
-                <Link href="/">Blogs</Link>
-                <Link href="/*">*</Link>
-
-                <button
-                  onClick={() => {
-                    localStorage.clear();
-                    window.location.href = "/login";
-                  }}
-                  className="text-red-500 text-left"
-                >
-                  Logout
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      )}
     </header>
   );
 }
