@@ -28,11 +28,13 @@ export default function LoginPage() {
       });
 
       const token = res.data.accessToken;
+
       localStorage.setItem("token", token);
 
-      if (!token) {
-        throw new Error("Token missing from server");
-      }
+      // 👇 THIS is the fix
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      window.dispatchEvent(new Event("auth-change"));
 
       const decoded: any = jwtDecode(token);
       localStorage.setItem("role", decoded.role);

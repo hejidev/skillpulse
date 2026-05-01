@@ -8,21 +8,33 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const syncAuth = () => {
+      const token = localStorage.getItem("token");
+      const userData = localStorage.getItem("user");
 
-    if (!token) {
+      if (!token || !userData) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setUser(JSON.parse(userData));
+      } catch {
+        localStorage.removeItem("user");
+        setUser(null);
+      }
+
       setLoading(false);
-      return;
-    }
+    };
 
-    try {
-      const decoded = jwtDecode(token);
-      setUser(decoded);
-    } catch (err) {
-      localStorage.removeItem("token");
-    }
+    syncAuth();
 
-    setLoading(false);
+    window.addEventListener("auth-change", syncAuth);
+
+    return () => {
+      window.removeEventListener("auth-change", syncAuth);
+    };
   }, []);
 
   return { user, loading };

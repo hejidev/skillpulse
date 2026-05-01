@@ -25,7 +25,7 @@ export default function Hero() {
 
     if (!token) {
       toast.error("Please login to start tracking 🚀");
-      router.push("/login");
+      router.push("/auth/login");
       return;
     }
 

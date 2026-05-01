@@ -9,15 +9,11 @@ import {
   NavigationMenuList,
   NavigationMenuItem,
 } from "@/components/ui/navigation-menu";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Bell, Menu } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import UserDropdown from "./UserDropdown";
+import { io } from "socket.io-client";
+import { toast } from "sonner";
 
 export default function Navbar() {
   const { user, loading } = useAuthContext();
@@ -30,9 +26,27 @@ export default function Navbar() {
   const isActive = (path: string) => pathname === path;
 
   const getGreeting = () => {
-    if (!user?.name) return "Hi there 👋";
+    if (!user?.name) return "Welcome 👋";
     return `Hi ${user.name.split(" ")[0]} 👋`;
   };
+
+ 
+
+const socket = io("https://skillpulse.onrender.com");
+
+useEffect(() => {
+  const userId = localStorage.getItem("userId");
+
+  socket.emit("register", userId);
+
+  socket.on("notification", (data) => {
+    toast.success(data.message);
+  });
+
+  return () => {
+    socket.disconnect();
+  };
+}, []);
 
   return (
     <header className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
@@ -86,32 +100,32 @@ export default function Navbar() {
 
                 <NavigationMenuItem>
                   <Link
-                    href="/skills"
+                    href="/"
                     className={`transition ${isActive("/skills") ? "text-white" : "text-gray-400"
                       }`}
                   >
-                    Skills
+                    About Us
                   </Link>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
                   <Link
-                    href="/progress"
+                    href="/"
                     className={`transition ${isActive("/progress") ? "text-white" : "text-gray-400"
                       }`}
                   >
-                    Progress
+                    Contact
                   </Link>
 
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
                   <Link
-                    href="/leaderboard"
+                    href="/"
                     className={`transition ${isActive("/leaderboard") ? "text-white" : "text-gray-400"
                       }`}
                   >
-                    Leaderboard
+                    Blogs
                   </Link>
 
                 </NavigationMenuItem>
@@ -146,47 +160,17 @@ export default function Navbar() {
           ) : (
             <>
               {/* 🔔 Notifications */}
-              <button className="relative p-2 rounded-lg hover:bg-white/10">
+              <Link href="/notification" className="relative p-2 rounded-lg hover:bg-white/10">
                 <Bell size={18} />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full" />
-              </button>
+              </Link>
 
               {/* 🧠 Greeting */}
               <span className="hidden md:block text-sm text-gray-300">
                 {getGreeting()}
               </span>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button>
-                    <Avatar className="cursor-pointer">
-                      <AvatarFallback>
-                        {user.name?.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                  </button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent className="bg-gray-900 border border-gray-800 text-white">
-                  <DropdownMenuItem asChild>
-                    <Link href="/userProfile">My Profile</Link>
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard/settings">Settings</Link>
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    onClick={() => {
-                      localStorage.clear();
-                      window.location.href = "/auth/login";
-                    }}
-                    className="text-red-500"
-                  >
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <UserDropdown />
             </>
           )}
 
@@ -215,10 +199,10 @@ export default function Navbar() {
             ) : (
               <>
                 <Link href="/dashboard">Dashboard</Link>
-                <Link href="/skills">Skills</Link>
-                <Link href="/progress">Progress</Link>
-                <Link href="/leaderboard">Leaderboard</Link>
-                <Link href="/userProfile">Profile</Link>
+                <Link href="/">About Us</Link>
+                <Link href="/">Contact</Link>
+                <Link href="/">Blogs</Link>
+                <Link href="/*">*</Link>
 
                 <button
                   onClick={() => {

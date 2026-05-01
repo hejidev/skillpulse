@@ -11,6 +11,7 @@ import {
   Trophy,
   ChevronLeft,
   ChevronRight,
+  Home,
 } from "lucide-react";
 
 const links = [
@@ -42,7 +43,9 @@ export default function Sidebar({
 
         {!collapsed && (
           <h1 className="text-xl font-bold bg-linear-to-r from-green-400 to-emerald-600 text-transparent bg-clip-text">
-            SkillPulse
+            <Link href="/">
+             SkillPulse
+             </Link>
           </h1>
         )}
 
