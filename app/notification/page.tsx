@@ -72,7 +72,7 @@ export default function NotificationsPage() {
 
                 {notifications.map((n) => (
                   <div
-                    key={n._id}
+                     key={n._id || n.id || `${n.message}-${n.createdAt}`}
                     className={`flex items-start justify-between p-4 rounded-lg border ${
                       n.read ? "opacity-60" : "bg-muted/40"
                     }`}

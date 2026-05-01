@@ -65,7 +65,7 @@ export default function NotificationBell() {
           ) : (
             data.map((n) => (
               <div
-                key={n._id}
+                key={n._id || n.id || `${n.message}-${n.createdAt}`}
                 className="p-3 flex justify-between hover:bg-muted/50"
               >
                 <div>
