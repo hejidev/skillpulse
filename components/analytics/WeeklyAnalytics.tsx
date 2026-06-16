@@ -4,18 +4,21 @@ import { useQuery } from "@tanstack/react-query";
 import API from "@/lib/api";
 import { startOfWeek, endOfWeek, isWithinInterval } from "date-fns";
 
-export default function WeeklyAnalytics({ skillId }: { skillId: string }) {
-  const { data = [] } = useQuery({
+export default function WeeklyAnalytics({ skillId }: { skillId: string | null }) {
+  const { data = [], isLoading } = useQuery({
     queryKey: ["progress", skillId],
+    enabled: !!skillId, // 🚀 key fix
     queryFn: async () => {
       const res = await API.get(`/progress/${skillId}`);
       return res.data;
     },
   });
 
+  const safeData = Array.isArray(data) ? data : [];
+
   const now = new Date();
 
-  const weekData = data.filter((item: any) =>
+  const weekData = safeData.filter((item: any) =>
     isWithinInterval(new Date(item.createdAt), {
       start: startOfWeek(now),
       end: endOfWeek(now),
@@ -31,10 +34,7 @@ export default function WeeklyAnalytics({ skillId }: { skillId: string }) {
 
   return (
     <div className="mt-6 p-4 rounded-xl bg-white/5 border border-white/10">
-
-      <h4 className="text-sm text-gray-400 mb-2">
-        Weekly Analytics
-      </h4>
+      <h4 className="text-sm text-gray-400 mb-2">Weekly Analytics</h4>
 
       <p className="text-sm">
         ⏱ Total: <span className="font-semibold">{total} hrs</span>
@@ -45,9 +45,7 @@ export default function WeeklyAnalytics({ skillId }: { skillId: string }) {
       </p>
 
       <p className="text-xs text-green-400 mt-2">
-        {total > 10
-          ? "🔥 Strong week!"
-          : "⚡ Try to stay consistent"}
+        {total > 10 ? "🔥 Strong week!" : "⚡ Try to stay consistent"}
       </p>
     </div>
   );

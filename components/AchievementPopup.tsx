@@ -10,7 +10,7 @@ export function AchievementPopup({ achievement }: any) {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 20, opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed top-4 right-4 z-50 bg-black border border-white/10 rounded-xl p-4 shadow-xl"
+      className="fixed top-12 right-4 z-50 bg-background border border-border rounded-xl p-4 shadow-xl"
     >
       <p className="text-sm">
         {achievement.icon} Achievement Unlocked!

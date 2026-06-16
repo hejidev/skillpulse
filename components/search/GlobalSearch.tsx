@@ -52,7 +52,7 @@ export default function GlobalSearch() {
           bg-white/5 
           border-white/10 
           backdrop-blur-xl 
-          h-12 
+          h-10 
           rounded-xl 
           px-4
           focus:ring-2 

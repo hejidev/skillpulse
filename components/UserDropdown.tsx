@@ -33,7 +33,7 @@ export default function UserDropdown() {
       </div>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-48 bg-black border border-gray-800 rounded-xl shadow-lg p-2 space-y-2">
+        <div className="absolute right-0 mt-2 w-48 bg-background border border-border rounded-xl shadow-lg p-2 space-y-2">
 
           <div className="px-2 py-1 text-sm text-gray-400">
             <h3>
@@ -42,7 +42,7 @@ export default function UserDropdown() {
           </div>
 
           <Link
-            href="/userProfile"
+            href="/dashboard"
             className="block px-2 py-1 hover:bg-white/10 rounded"
           >
             My Profile
@@ -53,6 +53,26 @@ export default function UserDropdown() {
             className="block px-2 py-1 hover:bg-white/10 rounded"
           >
             Settings
+          </Link>
+
+          <Link
+            href="/company/help"
+            className="block px-2 py-1 hover:bg-white/10 rounded"
+          >
+            Help
+          </Link>
+
+          <Link
+            href="/legal/privacy-policy"
+            className="block px-2 py-1 hover:bg-white/10 rounded"
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            href="/legal/terms"
+            className="block px-2 py-1 hover:bg-white/10 rounded"
+          >
+            Terms of Service
           </Link>
 
           <button

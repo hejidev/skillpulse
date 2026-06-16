@@ -1,35 +1,53 @@
+// lib/api.ts
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL, // e.g. http://localhost:5000/api
+  withCredentials: true,
 });
 
-// 🔥 Automatically attach token
-API.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
-    const token = localStorage.getItem("token");
+/* =========================================
+   REQUEST INTERCEPTOR
+========================================= */
+API.interceptors.request.use(
+  (config) => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
+);
 
-  return config;
-});
-
-// ✅ RESPONSE INTERCEPTOR (handle 401 globally)
+/* =========================================
+   RESPONSE INTERCEPTOR
+========================================= */
 API.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    if (err.response?.status === 401) {
-      // 🔥 Token expired or invalid
-      localStorage.clear();
+  (response) => response,
+  (error) => {
+    if (
+      error.response?.status === 401 &&
+      typeof window !== "undefined"
+    ) {
+      // remove auth info if token is no longer valid
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("role");
 
-      // redirect user to login
-      window.location.href = "/auth/login";
+      // optional: redirect to login if you want
+      // const isAuthPage = window.location.pathname.startsWith("/auth");
+      // if (!isAuthPage) window.location.href = "/auth/login";
     }
 
-    return Promise.reject(err);
+    return Promise.reject(error);
   }
 );
 

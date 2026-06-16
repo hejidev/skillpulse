@@ -22,7 +22,9 @@ const steps = [
 
 export default function HowItWorks() {
     return (
-        <section id="how" className="py-24 px-6 bg-gray-950 text-white">
+        <section id="how" className="py-24 px-6 bg-background
+text-foreground
+border-border">
             <div className="max-w-6xl mx-auto text-center">
 
                 {/* 🔥 Section Title */}

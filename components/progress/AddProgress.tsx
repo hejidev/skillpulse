@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import API from "@/lib/api";
 import { matchSkill } from "@/lib/utils/skillMatcher";
 import { useQuery } from "@tanstack/react-query";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,10 +12,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { fetchSkills } from "@/lib/api/skills";
@@ -45,20 +42,19 @@ export default function AddProgress({ skillId }: { skillId?: string }) {
       const match = matchSkill(note, skills);
       setSuggestedSkill(match);
       setThinking(false);
-    }, 400); // debounce
+    }, 400);
 
     return () => clearTimeout(timer);
   }, [note, skills]);
 
   const finalSkillId = suggestedSkill?._id || skillId;
 
-  if (!finalSkillId) {
-    toast.error("No skill detected. Please select one.");
-    return;
-  }
-
-
   const handleSubmit = async () => {
+    if (!finalSkillId) {
+      toast.error("No skill detected.");
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -74,25 +70,16 @@ export default function AddProgress({ skillId }: { skillId?: string }) {
       setNote("");
       setOpen(false);
 
-      // 🔥 refresh BOTH progress + skills
-      queryClient.invalidateQueries({ queryKey: ["progress", skillId] });
+      queryClient.invalidateQueries({ queryKey: ["all-progress"] });
       queryClient.invalidateQueries({ queryKey: ["skills"] });
 
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error("Failed to add progress");
     } finally {
       setLoading(false);
     }
   };
-
-  {
-    thinking && (
-      <div className="text-xs text-gray-400">
-        🤖 thinking...
-      </div>
-    )
-  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -109,7 +96,6 @@ export default function AddProgress({ skillId }: { skillId?: string }) {
 
           <Input
             type="number"
-            placeholder="Hours spent"
             value={hours}
             onChange={(e) => setHours(Number(e.target.value))}
           />
@@ -120,25 +106,22 @@ export default function AddProgress({ skillId }: { skillId?: string }) {
             onChange={(e) => setNote(e.target.value)}
           />
 
-          {suggestedSkill && (
-            <div className="p-2 text-xs bg-green-500/10 border border-green-500/30 rounded">
-              💡 Suggested: <b>{suggestedSkill.name}</b>
-            </div>
-          )}
-
           {thinking && (
             <div className="text-xs text-gray-400">
               🤖 thinking...
             </div>
           )}
 
-          <Button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="w-full"
-          >
+          {suggestedSkill && (
+            <div className="p-2 text-xs bg-green-500/10 border rounded">
+              💡 Suggested: <b>{suggestedSkill.name}</b>
+            </div>
+          )}
+
+          <Button onClick={handleSubmit} disabled={loading}>
             {loading ? "Saving..." : "Add Progress"}
           </Button>
+
         </div>
       </DialogContent>
     </Dialog>

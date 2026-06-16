@@ -9,35 +9,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-
 import { Bell, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import API from "@/lib/api";
+
+import { useNotifications } from "@/lib/notifications/useNotifications";
 
 export default function NotificationBell() {
-  const [data, setData] = useState<any[]>([]);
-
-  const fetchData = async () => {
-    const res = await API.get("/settings/notifications");
-    setData(res.data);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const unread = data.filter((n) => !n.read).length;
-
-  const markRead = async (id: string) => {
-    await API.put(`/settings/notifications/${id}/read`);
-    fetchData();
-  };
-
-  const archive = async (id: string) => {
-    await API.put(`/settings/notifications/${id}/archive`);
-    fetchData();
-  };
+  const {
+    notifications,
+    unread,
+    deleteNotification,
+  } = useNotifications();
 
   return (
     <DropdownMenu>
@@ -55,17 +36,16 @@ export default function NotificationBell() {
 
       <DropdownMenuContent className="w-96 p-0">
         <div className="p-3 font-semibold">Notifications</div>
-        <Separator />
 
         <ScrollArea className="h-80">
-          {data.length === 0 ? (
+          {notifications.length === 0 ? (
             <p className="p-4 text-sm text-muted-foreground">
               No notifications
             </p>
           ) : (
-            data.map((n) => (
+            notifications.map((n: any) => (
               <div
-                key={n._id || n.id || `${n.message}-${n.createdAt}`}
+                key={n._id}
                 className="p-3 flex justify-between hover:bg-muted/50"
               >
                 <div>
@@ -75,25 +55,13 @@ export default function NotificationBell() {
                   </p>
                 </div>
 
-                <div className="flex gap-2">
-                  {!n.read && (
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => markRead(n._id)}
-                    >
-                      ✓
-                    </Button>
-                  )}
-
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => archive(n._id)}
-                  >
-                    <Trash2 className="w-4 h-4 text-red-500" />
-                  </Button>
-                </div>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => deleteNotification(n._id)}
+                >
+                  <Trash2 className="w-4 h-4 text-red-500" />
+                </Button>
               </div>
             ))
           )}

@@ -49,14 +49,6 @@ export default function ResetPasswordClient() {
     }
   };
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    if (otp.join("").length === 6) {
-      handleReset();
-    }
-  }, [otp]);
-
   const handleChange = (value: string, index: number) => {
     if (!/^\d?$/.test(value)) return;
 

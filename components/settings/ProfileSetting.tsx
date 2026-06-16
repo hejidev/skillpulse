@@ -49,7 +49,7 @@ export default function ProfileSetting() {
   };
 
   return (
-    <div className="p-6 border rounded-xl bg-white/5 space-y-4">
+    <div className="p-6 border border-border rounded-xl bg-background space-y-4">
 
       <h2 className="font-semibold">Profile</h2>
 
@@ -66,6 +66,7 @@ export default function ProfileSetting() {
           onChange={(e) =>
             e.target.files && handleFile(e.target.files[0])
           }
+          className="border-foreground text-input border p-2"
         />
       </div>
 
@@ -73,13 +74,13 @@ export default function ProfileSetting() {
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full p-2 rounded bg-black/30 border"
+        className="w-full p-2 rounded border-foreground text-input border"
         placeholder="Your name"
       />
 
       <button
         onClick={handleSave}
-        className="px-4 py-2 bg-blue-600 rounded"
+        className="px-4 py-2 border border-brand rounded font-semibold"
       >
         Save Changes
       </button>

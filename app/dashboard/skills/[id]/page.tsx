@@ -20,6 +20,7 @@ import AddProgress from "@/components/progress/AddProgress";
 import AICoach from "@/components/ai/AICoach";
 import { Card } from "@/components/ui/card";
 import PremiumCalendarHeatmap from "@/components/analytics/Heatmap";
+import FocusMode from "@/components/focus/FocusMode";
 
 /* ---------------- TABS ---------------- */
 const tabs = ["Overview", "Analytics", "Activity", "Insights"] as const;
@@ -29,6 +30,7 @@ type Tab = typeof tabs[number];
 export default function SkillDetailPage() {
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState<Tab>("Overview");
+    const [focusOpen, setFocusOpen] = useState(false);
 
     const { data, isLoading } = useQuery({
         queryKey: ["skill", id],
@@ -110,6 +112,18 @@ export default function SkillDetailPage() {
 
                             {/* Add Progress Modal */}
                             <AddProgressModal skillId={skill._id} />
+                            <Button
+                                className="w-full mt-2 bg-indigo-600 hover:bg-indigo-700"
+                                onClick={() => setFocusOpen(true)}
+                            >
+                                🎯 Enter Focus Mode
+                            </Button>
+                            {focusOpen && (
+                                <FocusMode
+                                    skill={skill}
+                                    onClose={() => setFocusOpen(false)}
+                                />
+                            )}
                         </div>
                     )}
 

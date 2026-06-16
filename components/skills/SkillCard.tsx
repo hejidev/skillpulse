@@ -15,18 +15,28 @@ import {
 } from "@/components/ui/accordion";
 
 import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
+import { Button } from "../ui/button";
+import FocusMode from "../focus/FocusMode";
+import { useState } from "react";
 
+/* ---------------- UTIL ---------------- */
+const getStatus = (progress: number) => {
+  if (progress < 20) return "🚀 Starting";
+  if (progress < 50) return "⚡ Building";
+  if (progress < 80) return "🔥 Strong";
+  return "🏆 Mastery";
+};
+
+/* ---------------- COMPONENT ---------------- */
 export default function SkillCard({ skill }: any) {
   const totalHours = skill.totalHours || 0;
   const targetHours = skill.targetHours || 1;
+  const [focusOpen, setFocusOpen] = useState(false);
 
-  // 🎯 PROGRESS %
-  const progress = Math.min(
-    100,
-    (totalHours / targetHours) * 100
-  );
+  const progress = Math.min(100, (totalHours / targetHours) * 100);
 
-  // ⚡ SKILL LEVEL (independent level system per skill)
+  // ⚡ LEVEL SYSTEM
   const skillXP = totalHours * 10;
   const level = getLevel(skillXP);
 
@@ -36,96 +46,159 @@ export default function SkillCard({ skill }: any) {
   const levelProgress =
     nextLevelXP > currentLevelXP
       ? ((skillXP - currentLevelXP) /
-          (nextLevelXP - currentLevelXP)) *
-        100
+        (nextLevelXP - currentLevelXP)) *
+      100
       : 0;
 
   return (
-    <div className="relative rounded-2xl border border-white/10 bg-linear-to-br from-white/5 to-transparent p-5 hover:shadow-xl transition overflow-hidden">
-
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -6 }}
+      className="relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 overflow-hidden shadow-xl hover:shadow-2xl transition-all"
+    >
       {/* 🔥 BACKGROUND GLOW */}
-      <div className="absolute inset-0 opacity-10 bg-linear-to-r from-indigo-500 to-purple-600 blur-2xl" />
+      <div className="absolute inset-0 opacity-20 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 blur-3xl" />
 
-      <div className="relative">
+      <div className="relative space-y-6">
 
-        {/* HEADER */}
-        <div className="flex justify-between items-start mb-3">
+        {/* ================= HEADER ================= */}
+        <div className="flex justify-between items-start">
           <div>
-            <h3 className="text-lg font-semibold">{skill.name}</h3>
+            <h3 className="text-xl font-semibold tracking-tight">
+              {skill.name}
+            </h3>
 
-            <p className="text-xs text-gray-400">
-              Level {level} • {totalHours}h total
+            <p className="text-xs text-gray-400 mt-1">
+              Level {level} • {totalHours} hrs
             </p>
           </div>
 
-          <Badge className="bg-purple-500/10 text-purple-300 border border-purple-500/20">
-            {progress.toFixed(0)}%
+          <Badge className="bg-white/10 border border-white/20 text-white">
+            {getStatus(progress)}
           </Badge>
         </div>
 
-        {/* 🧠 AI COACH */}
-        <div className="mb-4">
-          <AICoach skill={skill} />
+        {/* ================= PROGRESS RING ================= */}
+        <div className="flex items-center justify-between">
+
+          {/* 🔵 RADIAL PROGRESS */}
+          <div className="relative w-24 h-24">
+            <svg className="w-full h-full transform -rotate-90">
+              <circle
+                cx="50%"
+                cy="50%"
+                r="40"
+                stroke="rgba(255,255,255,0.1)"
+                strokeWidth="8"
+                fill="transparent"
+              />
+              <motion.circle
+                cx="50%"
+                cy="50%"
+                r="40"
+                stroke="url(#grad)"
+                strokeWidth="8"
+                fill="transparent"
+                strokeDasharray={251}
+                strokeDashoffset={251 - (progress / 100) * 251}
+                strokeLinecap="round"
+              />
+              <defs>
+                <linearGradient id="grad">
+                  <stop offset="0%" stopColor="#6366f1" />
+                  <stop offset="100%" stopColor="#a855f7" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <div className="absolute inset-0 flex items-center justify-center text-sm font-bold">
+              {progress.toFixed(0)}%
+            </div>
+          </div>
+
+          {/* 📊 QUICK STATS */}
+          <div className="text-right space-y-1">
+            <p className="text-xs text-gray-400">XP</p>
+            <p className="font-semibold">{skillXP}</p>
+
+            <p className="text-xs text-gray-400 mt-2">Target</p>
+            <p className="font-semibold">{targetHours}h</p>
+          </div>
         </div>
 
-        {/* 📊 SKILL LEVEL BAR */}
-        <div className="mb-3">
+        {/* ================= LEVEL BAR ================= */}
+        <div>
           <div className="flex justify-between text-xs text-gray-400 mb-1">
-            <span>Skill Level XP</span>
-            <span>{skillXP} XP</span>
+            <span>Level Progress</span>
+            <span>{Math.floor(levelProgress)}%</span>
           </div>
 
           <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-linear-to-r from-indigo-500 to-purple-600 transition-all"
-              style={{ width: `${Math.min(100, levelProgress)}%` }}
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${levelProgress}%` }}
+              className="h-full bg-gradient-to-r from-indigo-500 to-purple-600"
             />
           </div>
 
           <p className="text-[11px] text-gray-500 mt-1">
-            {Math.max(0, Math.ceil(nextLevelXP - skillXP))} XP to next skill level
+            {Math.max(0, Math.ceil(nextLevelXP - skillXP))} XP to next level
           </p>
         </div>
 
-        {/* 📊 OVERALL PROGRESS BAR */}
-        <div className="mb-4">
-          <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-linear-to-r from-green-400 to-emerald-500 transition-all"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+        {/* ================= MAIN ACTION ================= */}
+        <div className="pt-2">
+          <AddProgress skillId={skill._id} />
         </div>
 
-        {/* ➕ ADD PROGRESS */}
-        <AddProgress skillId={skill._id} />
+        {/* ================= AI COACH ================= */}
+        <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+          <AICoach skill={skill} />
+        </div>
 
-        {/* 🔽 ACCORDION SECTIONS */}
-        <Accordion type="single" collapsible className="mt-4 space-y-2">
+        <div>
+          <Button
+            className="w-full mt-2 bg-indigo-600 hover:bg-indigo-700"
+            onClick={() => setFocusOpen(true)}
+          >
+            🎯 Enter Focus Mode
+          </Button>
+          {focusOpen && (
+            <FocusMode
+              skill={skill}
+              onClose={() => setFocusOpen(false)}
+            />
+          )}
+        </div>
+
+        {/* ================= EXPANDABLE SECTIONS ================= */}
+        <Accordion type="single" collapsible className="space-y-2">
 
           <AccordionItem value="analytics">
-            <AccordionTrigger>📊 Analytics</AccordionTrigger>
+            <AccordionTrigger>📊 Performance Analytics</AccordionTrigger>
             <AccordionContent>
               <AnalyticsChart skillId={skill._id} />
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="insights">
-            <AccordionTrigger>🧠 Insights</AccordionTrigger>
+            <AccordionTrigger>🧠 Smart Insights</AccordionTrigger>
             <AccordionContent>
               <SkillInsights skillId={skill._id} skill={skill} />
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="weekly">
-            <AccordionTrigger>📅 Weekly Report</AccordionTrigger>
+            <AccordionTrigger>📅 Weekly Breakdown</AccordionTrigger>
             <AccordionContent>
               <WeeklyAnalytics skillId={skill._id} />
             </AccordionContent>
           </AccordionItem>
 
         </Accordion>
+
       </div>
-    </div>
+    </motion.div>
   );
 }

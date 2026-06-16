@@ -1,59 +1,66 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import API from "@/lib/api";
-import { toast } from "sonner";
 
 export function useNotifications() {
-  const [notifications, setNotifications] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [unread, setUnread] = useState(0);
+  const queryClient = useQueryClient();
 
-  const fetchNotifications = async () => {
-    try {
+  // 📥 FETCH (single source of truth)
+  const { data: notifications = [], isLoading } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: async () => {
       const res = await API.get("/settings/notifications");
-      setNotifications(res.data);
+      return res.data;
+    },
+  });
 
-      const unreadCount = res.data.filter((n: any) => !n.read).length;
-      setUnread(unreadCount);
-    } catch (err) {
-      toast.error("Failed to load notifications");
-    } finally {
-      setLoading(false);
+  // 📊 UNREAD COUNT
+  const unread = notifications.filter((n: any) => !n.read).length;
+
+  // 🗑 DELETE
+  const deleteNotification = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await API.delete(`/settings/notifications/${id}`);
+      return res.data;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      await queryClient.refetchQueries({ queryKey: ["notifications"] });
     }
-  };
+  });
 
-  const deleteNotification = async (id: string) => {
-    await API.delete(`/settings/notifications/${id}`);
-    setNotifications((prev) => prev.filter((n) => n._id !== id));
-  };
+  // 🧹 CLEAR ALL
+  const clearAll = useMutation({
+    mutationFn: async () => {
+      const res = await API.delete("/settings/notifications/clear-all");
+      return res.data;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      await queryClient.refetchQueries({ queryKey: ["notifications"] });
+    }
+  });
 
-  const clearAll = async () => {
-    await API.delete("/settings/notifications/clear-all");
-    setNotifications([]);
-    setUnread(0);
-  };
-
-  const markAllRead = async () => {
-    await API.put("/settings/notifications/read");
-    setNotifications((prev) =>
-      prev.map((n) => ({ ...n, read: true }))
-    );
-    setUnread(0);
-  };
-
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
+  // ✅ MARK ALL READ
+  const markAllRead = useMutation({
+    mutationFn: async () => {
+      const res = await API.put("/settings/notifications/read");
+      return res.data;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      await queryClient.refetchQueries({ queryKey: ["notifications"] });
+    }
+  });
 
   return {
     notifications,
-    loading,
     unread,
-    refetch: fetchNotifications,
-    deleteNotification,
-    clearAll,
-    markAllRead,
-    setNotifications,
+    isLoading,
+
+    deleteNotification: deleteNotification.mutate,
+    clearAll: clearAll.mutate,
+    markAllRead: markAllRead.mutate,
   };
 }

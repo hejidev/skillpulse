@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import LayoutClient from "./LayoutClient";
-
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "SkillPulse",
@@ -13,11 +13,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <LayoutClient>{children}</LayoutClient>
+        <Providers>
+          <LayoutClient>{children}</LayoutClient>
+        </Providers>
       </body>
     </html>
   );

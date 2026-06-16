@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthContext } from "@/components/auth-provider";
 import { Button } from "@/components/ui/button";
+import { useNotifications } from "@/lib/notifications/useNotifications";
+import { useGlobalNotifications } from "@/hooks/useGlobalNotifications";
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -15,12 +17,18 @@ import UserDropdown from "./UserDropdown";
 import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
 import API from "@/lib/api";
+import { useAppConfig } from "@/lib/useAppConfig";
 
 export default function Navbar() {
   const { user, loading } = useAuthContext();
+
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const { unread } = useNotifications();
+  useGlobalNotifications(); // keep socket sync globally
+
+
+  const { config } = useAppConfig(); // load app name
 
   const socketRef = useRef<Socket | null>(null);
 
@@ -39,7 +47,7 @@ export default function Navbar() {
 
     socketRef.current.on("notification", (data: any) => {
       toast.success(data.message);
-      setUnreadCount((prev) => prev + 1);
+      // setUnreadCount((prev) => prev + 1);
     });
 
     // ✅ FETCH UNREAD (SAFE NOW)
@@ -48,7 +56,7 @@ export default function Navbar() {
         const res = await API.get("/settings/notifications");
 
         const unread = res.data.filter((n: any) => !n.read).length;
-        setUnreadCount(unread);
+        // setUnreadCount(unread);
       } catch (err) {
         console.error("Unread count error:", err);
       }
@@ -71,97 +79,292 @@ export default function Navbar() {
     return `Hi ${user.name.split(" ")[0]} 👋`;
   };
 
-  return (
-    <header className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+  const appName = config?.appName || "SkillPulse";
+  const appInitial = appName.charAt(0).toUpperCase();
 
-        <Link
-          href="/"
-          className="text-xl font-bold bg-linear-to-r from-purple-400 to-green-400 bg-clip-text text-transparent"
-        >
-          SkillPulse
+  return (
+    <header
+  className="
+    fixed top-0 w-full z-50
+    border-b border-border
+    bg-background/70
+    backdrop-blur-2xl
+    supports-backdrop-filter:bg-background/60
+    transition-colors duration-300
+  "
+>
+
+  {/* 🌌 TOP GLOW */}
+  <div className="absolute inset-0 -z-10 overflow-hidden">
+
+    <div className="absolute left-0 top-0 w-75 h-75 bg-green-500/10 blur-[120px] rounded-full" />
+
+    <div className="absolute right-0 top-0 w-75 h-75 bg-purple-500/10 blur-[120px] rounded-full" />
+
+  </div>
+
+  <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+
+    {/* ================= LOGO ================= */}
+    <Link href="/" className="group flex items-center gap-3">
+          <div
+            className="
+              w-10 h-10 rounded-2xl
+              bg-linear-to-br from-brand/40 to-brand/90
+              flex items-center justify-center
+              text-muted-foreground font-black
+              shadow-[0_0_25px_rgba(34,197,94,0.25)]
+              transition-transform duration-300
+              group-hover:scale-105
+            "
+          >
+            {appInitial}
+          </div>
+
+          <div>
+            <h1
+              className="
+                text-xl font-black tracking-tight
+                bg-linear-to-r from-brand/40 to-brand/90
+                bg-clip-text text-transparent
+              "
+            >
+              {appName}
+            </h1>
+
+            <p className="hidden md:block text-[10px] text-muted-foreground -mt-1">
+              Growth Intelligence
+            </p>
+          </div>
         </Link>
 
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList className="flex gap-6 text-sm">
+    {/* ================= NAVIGATION ================= */}
+    <NavigationMenu className="hidden md:flex">
 
-            {!user ? (
-              <>
-                <NavigationMenuItem>
-                  <Link href="#features" className="text-gray-400">
-                    Features
-                  </Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link href="#how" className="text-gray-400">
-                    How it Works
-                  </Link>
-                </NavigationMenuItem>
-              </>
-            ) : (
-              <>
-                <NavigationMenuItem>
-                  <Link href="/dashboard">Dashboard</Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link href="/">About Us</Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link href="/">Contact</Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link href="/">Blogs</Link>
-                </NavigationMenuItem>
-              </>
-            )}
-          </NavigationMenuList>
-        </NavigationMenu>
+      <NavigationMenuList className="flex items-center gap-2">
 
-        <div className="flex items-center gap-3">
+        {!user ? (
+          <>
 
-          {!user ? (
-            <>
-              <Link href="/auth/login">
-                <Button variant="ghost">Login</Button>
-              </Link>
-              <Link href="/auth/signup">
-                <Button className="bg-green-500 text-black">
-                  Get Started
-                </Button>
-              </Link>
-            </>
-          ) : (
-            <>
-              {/* 🔔 NOTIFICATION */}
+            <NavigationMenuItem>
               <Link
-                href="/notification"
-                className="relative p-2 rounded-lg hover:bg-white/10"
+                href="/company/about"
+                className="
+                  px-4 py-2 rounded-xl
+                  text-sm text-muted-foreground
+                  hover:text-foreground
+                  hover:bg-accent
+                  transition-all duration-300
+                "
               >
-                <Bell size={18} />
-
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-green-500 text-black text-[10px] px-1.5 rounded-full">
-                    {unreadCount}
-                  </span>
-                )}
+                About
               </Link>
+              
 
-              <span className="hidden md:block text-sm text-gray-300">
-                {getGreeting()}
-              </span>
+              <Link href="/company/careers"
+                className="
+                  px-4 py-2 rounded-xl
+                  text-sm text-muted-foreground
+                  hover:text-foreground
+                  hover:bg-accent
+                  transition-all duration-300
+                ">Careers</Link>
 
-              <UserDropdown />
-            </>
-          )}
+                
+              <Link href="/company/community"
+                className="
+                  px-4 py-2 rounded-xl
+                  text-sm text-muted-foreground
+                  hover:text-foreground
+                  hover:bg-accent
+                  transition-all duration-300
+                ">Community</Link>
+                
+              <Link href="/company/blogs"
+                className="
+                  px-4 py-2 rounded-xl
+                  text-sm text-muted-foreground
+                  hover:text-foreground
+                  hover:bg-accent
+                  transition-all duration-300
+                ">Blogs</Link>
 
-          <button
-            className="md:hidden p-2"
-            onClick={() => setOpen(!open)}
+              <Link href="/company/contacts"
+                className="
+                  px-4 py-2 rounded-xl
+                  text-sm text-muted-foreground
+                  hover:text-foreground
+                  hover:bg-accent
+                  transition-all duration-300
+                ">Contact</Link>
+            </NavigationMenuItem>
+          </>
+        ) : (
+          <>
+            {[
+              {
+                name: "About",
+                href: "/company/about",
+              },
+              {
+                name: "Careers",
+                href: "/company/careers",
+              },
+              {
+                name: "Community",
+                href: "/company/community",
+              },
+              {
+                name: "Billings",
+                href: "/company/billing",
+              },
+              {
+                name: "Blogs",
+                href: "/company/blogs",
+              },
+              {
+                name: "Contact",
+                href: "/company/contacts",
+              },
+            ].map((link, i) => (
+
+              <NavigationMenuItem key={i}>
+                <Link
+                  href={link.href}
+                  className="
+                    relative px-4 py-2 rounded-xl
+                    text-sm text-muted-foreground
+                    hover:text-foreground
+                    hover:bg-accent
+                    transition-all duration-300
+                  "
+                >
+                  {link.name}
+                </Link>
+              </NavigationMenuItem>
+
+            ))}
+          </>
+        )}
+
+      </NavigationMenuList>
+
+    </NavigationMenu>
+
+    {/* ================= RIGHT ================= */}
+    <div className="flex items-center gap-3">
+
+      {!user ? (
+        <>
+
+          <Link href="/auth/login">
+            <Button
+              variant="ghost"
+              className="
+                rounded-xl
+                text-foreground
+                hover:bg-accent
+                hover:text-foreground
+              "
+            >
+              Login
+            </Button>
+          </Link>
+
+          <Link href="/auth/signup">
+            <Button
+              className="
+                rounded-xl
+                bg-linear-to-r from-green-500 to-emerald-400
+                text-black font-semibold
+                hover:scale-[1.02]
+                transition-all duration-300
+                shadow-[0_0_30px_rgba(34,197,94,0.25)]
+              "
+            >
+              Get Started
+            </Button>
+          </Link>
+
+        </>
+      ) : (
+        <>
+
+          {/* 🔔 NOTIFICATIONS */}
+          <Link
+            href="/dashboard/notifications"
+            className="
+              relative p-2.5 rounded-xl
+              border border-border
+              bg-card/40
+              hover:bg-accent
+              transition-all duration-300
+            "
           >
-            <Menu />
-          </button>
-        </div>
-      </div>
-    </header>
+
+            <Bell size={18} />
+
+            {unread > 0 && (
+              <span
+                className="
+                  absolute -top-1 -right-1
+                  min-w-4.5 h-4.5
+                  px-1 rounded-full
+                  bg-green-500
+                  text-black
+                  text-[10px]
+                  font-bold
+                  flex items-center justify-center
+                  shadow-[0_0_15px_rgba(34,197,94,0.4)]
+                "
+              >
+                {unread}
+              </span>
+            )}
+
+          </Link>
+
+          {/* GREETING */}
+          <div
+            className="
+              hidden lg:flex items-center gap-2
+              px-4 py-2 rounded-xl
+              border border-border
+              bg-card/40
+            "
+          >
+
+            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+
+            <span className="text-sm text-muted-foreground">
+              {getGreeting()}
+            </span>
+
+          </div>
+
+          <UserDropdown />
+
+        </>
+      )}
+
+      {/* MOBILE MENU */}
+      <button
+        className="
+          md:hidden p-2.5 rounded-xl
+          border border-border
+          bg-card/40
+          hover:bg-accent
+          transition-all
+        "
+        onClick={() => setOpen(!open)}
+      >
+        <Menu size={20} />
+      </button>
+
+    </div>
+
+  </div>
+
+</header>
   );
 }

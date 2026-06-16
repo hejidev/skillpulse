@@ -1,126 +1,102 @@
 "use client";
 
-import { io } from "socket.io-client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import Link from "next/link";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect, useMemo } from "react";
 
-import API from "@/lib/api";
 import { fetchSkills } from "@/lib/api/skills";
-
 import { getAchievements } from "@/lib/utils/achievements";
 import { getLevel } from "@/lib/utils/xp";
 import { normalizeActivity } from "@/lib/utils/activityPro";
-import { calculateStreak } from "@/lib/utils/streak";
 
-import { useReminder } from "@/hooks/useReminder";
+import { useProgressData } from "@/hooks/useProgressData";
 
 import Leaderboard from "./leaderboard/page";
-import AddSkill from "@/components/skills/add-skill";
 import SkillCard from "@/components/skills/SkillCard";
 import { LevelCard } from "@/components/LevelCard";
 import { AchievementPopup } from "@/components/AchievementPopup";
 import { RecentActivity } from "@/components/RecentActivity";
-import SkillLevelUpPopup from "@/components/SkillLevelUpPopup";
-import SkillLevelUpCinematic from "@/components/SkillLevelUpCinematic";
 
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import {
-    startOfWeek,
-    endOfWeek,
-    isWithinInterval,
-    subDays,
-    format,
-} from "date-fns";
-import NotificationBell from "@/components/notificationBell";
+import { subDays, format } from "date-fns";
+import { socket, socketService } from "@/lib/socket";
 
-
-type Activity = {
-    _id: string;
-    hours: number;
-    xp: number;
-    skillName: string;
-    createdAt: string;
-};
+import { createSkill } from "@/lib/api/skills";
+import AddSkill from "@/components/skills/add-skill";
 
 export default function Dashboard() {
-    const [achievement, setAchievement] = useState<any>(null);
-    const [levelUp, setLevelUp] = useState<any>(null);
-    const [prevLevel, setPrevLevel] = useState(0);
-    const [skillLevels, setSkillLevels] = useState<Record<string, number>>({});
-    const [levelUpSkill, setLevelUpSkill] = useState<any>(null);
-    const [liveItem, setLiveItem] = useState<any>(null);
+  const [achievement, setAchievement] = useState<any>(null);
+  const [skillLevels, setSkillLevels] = useState<Record<string, number>>({});
+  const [levelUpSkill, setLevelUpSkill] = useState<any>(null);
 
-    const queryClient = useQueryClient();
+  const { progress, streak, freezeCount } = useProgressData();
+  const queryClient = useQueryClient();
 
-    // ✅ SINGLE SOCKET (FIXED + typed data)
-    useEffect(() => {
-        const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || "");
+  // 🔥 SKILL CREATION MUTATION
+  const createSkillMutation = useMutation({
+    mutationFn: createSkill,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["skills"] });
+    },
+  });
 
-        const userId =
-            typeof window !== "undefined"
-                ? localStorage.getItem("userId")
-                : null;
+  const handleCreateSkill = async ({
+    name,
+    level,
+  }: {
+    name: string;
+    level: string;
+  }) => {
+    await createSkillMutation.mutateAsync({ name, level });
+  };
 
-        if (userId) socket.emit("register", userId);
+  // 🔌 SOCKET
+  useEffect(() => {
+    socketService.connect();
 
-        socket.on("new-progress", (newItem: any) => {
-            queryClient.setQueryData(["all-progress"], (old: any = []) => [
-                newItem,
-                ...old,
-            ]);
-        });
+    const userId =
+      typeof window !== "undefined"
+        ? localStorage.getItem("userId")
+        : null;
 
-        socket.on("streak-alert", (data: { message: string }) => {
-            toast(data.message);
+    if (userId) {
+      socket.emit("register", userId);
+    }
 
-            const audio = new Audio("/sounds/level-up.mp3");
-            audio.volume = 0.5;
+    const handleNewProgress = (data: any) => {
+      queryClient.setQueryData(["all-progress"], (old: any) => ({
+        progress: [data.progress, ...(old?.progress || [])],
+        streak: data.streak ?? old?.streak ?? 0,
+        freezeCount: data.freezeCount ?? old?.freezeCount ?? 0,
+      }));
+    };
 
-            audio.play().catch((err) => {
-                console.warn("Audio play blocked:", err);
-            });
+    const handleStreakAlert = (data: { message: string }) => {
+      toast(data.message);
+    };
 
-            if (
-                typeof window !== "undefined" &&
-                Notification.permission === "granted"
-            ) {
-                new Notification("SkillPulse 🔥", {
-                    body: data.message,
-                    icon: "/logo.png",
-                });
-            }
-        });
+    socket.on("new-progress", handleNewProgress);
+    socket.on("streak-alert", handleStreakAlert);
 
-        return () => {
-            socket.disconnect();
-        };
-    }, [queryClient]);
+    return () => {
+      socket.off("new-progress", handleNewProgress);
+      socket.off("streak-alert", handleStreakAlert);
+    };
+  }, [queryClient]);
 
-    // ===============================
-    // 📦 FETCH SKILLS
-    // ===============================
-    const { data: skills = [], isError, error } = useQuery({
+    // 📦 SKILLS
+    const { data: skills = [] } = useQuery({
         queryKey: ["skills"],
         queryFn: fetchSkills,
     });
 
-    // ===============================
-    // 📦 FETCH ALL PROGRESS (SOURCE OF TRUTH)
-    // ===============================
-    const { data: allProgress = [] } = useQuery({
-        queryKey: ["all-progress"],
-        queryFn: async () => {
-            const res = await API.get("/progress");
-            return res.data;
-        },
-    });
+    // 🔥 NORMALIZED DATA
+    const normalized = useMemo(
+        () => progress.map(normalizeActivity),
+        [progress]
+    );
 
-    // ✅ SAFE SORT (avoid undefined bugs)
-
-    const recentActivity = [...allProgress]
-        .map(normalizeActivity)
+    // 📊 RECENT ACTIVITY
+    const recentActivity = [...normalized]
         .sort(
             (a: any, b: any) =>
                 new Date(b.createdAt).getTime() -
@@ -128,34 +104,35 @@ export default function Dashboard() {
         )
         .slice(0, 5);
 
+    // 🏆 ACHIEVEMENTS
     useEffect(() => {
-        const unlocked = getAchievements(allProgress);
+        const unlocked = getAchievements(progress);
         if (unlocked.length > 0) {
             setAchievement(unlocked[unlocked.length - 1]);
         }
-    }, [allProgress]);
+    }, [progress]);
 
-    const normalized: Activity[] = allProgress.map(normalizeActivity);
+    // ⚡ XP
+    const xp = normalized.reduce((acc: number, item: any) => acc + item.xp, 0);
 
-    const xp = normalized.reduce((acc, { xp }) => acc + xp, 0);
-
+    // 📅 LAST 7 DAYS
     const last7Days = Array.from({ length: 7 }).map((_, i) => {
         const date = new Date();
         date.setDate(date.getDate() - i);
 
-        const hours = allProgress
-            .filter((p: any) =>
-                new Date(p.createdAt).toDateString() === date.toDateString()
+        return normalized
+            .filter(
+                (p: any) =>
+                    new Date(p.createdAt).toDateString() ===
+                    date.toDateString()
             )
             .reduce((acc: number, p: any) => acc + p.hours, 0);
-
-        return hours;
     });
 
-    // ===============================
-    // 🧠 MAP PROGRESS → SKILLS
-    // ===============================
+    // 🧠 ENRICH SKILLS
     const enrichedSkills = useMemo(() => {
+        if (!skills.length) return [];
+
         const skillMap = new Map<string, any>();
 
         skills.forEach((skill: any) => {
@@ -165,7 +142,7 @@ export default function Dashboard() {
             });
         });
 
-        allProgress.forEach((log: any) => {
+        progress.forEach((log: any) => {
             const skillId = log.skillId?.toString();
             const skill = skillMap.get(skillId);
 
@@ -175,10 +152,9 @@ export default function Dashboard() {
         });
 
         return Array.from(skillMap.values());
-    }, [skills, allProgress]);
+    }, [skills, progress]); // ✅ MUST use progress, not allProgress
 
-
-    // 1️⃣ ONLY handle skill levels update (NO side effects here)
+    // 🎯 LEVEL SYSTEM
     useEffect(() => {
         const updated: Record<string, number> = {};
 
@@ -190,205 +166,51 @@ export default function Dashboard() {
         });
 
         setSkillLevels((prev) => {
-            // prevent useless re-renders
             const isSame =
                 Object.keys(updated).length === Object.keys(prev).length &&
                 Object.keys(updated).every((key) => updated[key] === prev[key]);
 
-            if (isSame) return prev;
+            if (isSame) return prev; // 🛑 stop infinite loop
 
             return updated;
         });
     }, [enrichedSkills]);
 
-    useEffect(() => {
-        if (!enrichedSkills.length) return;
-
-        enrichedSkills.forEach((skill: any) => {
-            const skillXP = (skill.totalHours || 0) * 10;
-            const level = getLevel(skillXP);
-
-            if (skillLevels[skill._id] && skillLevels[skill._id] !== level) {
-                setLevelUpSkill({
-                    skill,
-                    level,
-                });
-            }
-        });
-    }, [skillLevels, enrichedSkills]);
-
-    useEffect(() => {
-        if ("Notification" in window) {
-            Notification.requestPermission();
-        }
-    }, []);
-
-    useEffect(() => {
-        if (typeof window === "undefined") return;
-
-        const audio = new Audio("/sounds/level-up.mp3");
-        audio.volume = 0.6;
-
-        audio.play().catch((err) => {
-            console.log("Audio blocked:", err);
-        });
-    }, []);
-
-    const { data: reminder } = useReminder();
-    useEffect(() => {
-        if (reminder?.unread) {
-            toast("🔥 " + reminder.lastMessage);
-        }
-    }, [reminder]);
-
-    if (isError) {
-        console.log(error);
-        return <p className="m-auto text-red-500">Failed to load skills</p>;
-    }
-
-    // ===============================
-    // 📊 BASIC STATS
-    // ===============================
-    const totalSkills = skills.length;
-
-    const totalProgress = skills.reduce(
-        (acc: number, s: any) => acc + s.progress,
-        0
-    );
-
-    const avgProgress =
-        totalSkills > 0 ? totalProgress / totalSkills : 0;
-
-    // ===============================
-    // 🔥 GLOBAL STREAK (REAL)
-    // ===============================
-    const globalStreak = calculateStreak(allProgress);
-
-    // ===============================
-    // 🎯 GLOBAL GOAL
-    // ===============================
-    const totalHoursAll = skills.reduce(
-        (acc: number, s: any) => acc + (s.totalHours || 0),
-        0
-    );
-
-    const totalTargetAll = skills.reduce(
-        (acc: number, s: any) => acc + (s.targetHours || 0),
-        0
-    );
-
-    const globalGoalPercent =
-        totalTargetAll > 0
-            ? (totalHoursAll / totalTargetAll) * 100
-            : 0;
-
-    // ===============================
-    // 🧠 CONSISTENCY (FIXED)
-    // ===============================
+    // 📊 CONSISTENCY
     const getConsistency = (logs: any[] = []) => {
         if (!logs.length) return 0;
 
         const today = new Date();
 
-        const last7Days = Array.from({ length: 7 }).map((_, i) =>
+        const last7 = Array.from({ length: 7 }).map((_, i) =>
             format(subDays(today, i), "yyyy-MM-dd")
         );
 
-        const activeDaysSet = new Set(
-            logs.map((log: any) =>
-                format(new Date(log.createdAt), "yyyy-MM-dd")
+        const set = new Set(
+            logs.map((l) =>
+                format(new Date(l.createdAt), "yyyy-MM-dd")
             )
         );
 
-        const activeDays = last7Days.filter((day) =>
-            activeDaysSet.has(day)
-        ).length;
-
-        return (activeDays / 7) * 100;
+        return (last7.filter((d) => set.has(d)).length / 7) * 100;
     };
 
-    const mostConsistentSkill =
-        enrichedSkills.length > 0
-            ? [...enrichedSkills].sort(
-                (a, b) => getConsistency(b.logs) - getConsistency(a.logs)
-            )[0]
-            : null;
-
-    // ===============================
-    // 📈 IMPROVEMENT (FIXED)
-    // ===============================
-    const getWeeklyImprovement = (logs: any[] = []) => {
-        const now = new Date();
-
-        const thisWeek = logs
-            .filter((log: any) =>
-                isWithinInterval(new Date(log.createdAt), {
-                    start: startOfWeek(now),
-                    end: endOfWeek(now),
-                })
-            )
-            .reduce((acc: number, log: any) => acc + log.hours, 0);
-
-        const lastWeek = logs
-            .filter((log: any) =>
-                isWithinInterval(new Date(log.createdAt), {
-                    start: startOfWeek(subDays(now, 7)),
-                    end: endOfWeek(subDays(now, 7)),
-                })
-            )
-            .reduce((acc: number, log: any) => acc + log.hours, 0);
-
-        return thisWeek - lastWeek;
-    };
-
-    const mostImprovedSkill =
+    const mostConsistent =
         enrichedSkills.length > 0
             ? [...enrichedSkills].sort(
                 (a, b) =>
-                    getWeeklyImprovement(b.logs) - getWeeklyImprovement(a.logs)
+                    getConsistency(b.logs) -
+                    getConsistency(a.logs)
             )[0]
             : null;
 
-
-    // ===============================
-    // ⚡ SORT BY ACTIVITY (FIXED)
-    // ===============================
-    const getLastActivity = (logs: any[]) => {
-        if (!logs.length) return 0;
-
-        return Math.max(
-            ...logs.map((log: any) =>
-                new Date(log.createdAt).getTime()
-            )
-        );
-    };
-
-    const sortedSkills = enrichedSkills.sort(
-        (a: any, b: any) =>
-            getLastActivity(b.logs) - getLastActivity(a.logs)
-    );
-
-    // ===============================
-    // 🏆 TOP SKILL
-    // ===============================
-    const topSkill = [...skills].sort((a: any, b: any) => {
-        if (b.progress !== a.progress) {
-            return b.progress - a.progress;
-        }
-        return (b.totalHours || 0) - (a.totalHours || 0);
-    })[0];
-
-    // const rawXP = calculateXP(allProgress);
-    // const xp = Number(rawXP) || 0;
-
-
-
     return (
-        <div className="space-y-10">
+        <div className="space-y-10 bg-background
+text-foreground
+border-border">
 
-            {/* HERO */}
+            {/* HEADER */}
             <div className="flex justify-between pt-10">
-                <NotificationBell />
                 <div>
                     <h1 className="text-5xl font-bold">Dashboard</h1>
                     <p className="text-gray-400 mt-2">
@@ -396,93 +218,57 @@ export default function Dashboard() {
                     </p>
                 </div>
 
-                <AddSkill />
+                 <AddSkill onCreate={handleCreateSkill} />
             </div>
 
             {/* STATS */}
             <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
 
-                <Stat label="Skills" value={totalSkills} />
-                {/* <Stat label="Streak" value={`🔥 ${globalStreak} days`} /> */}
+                <Stat label="Skills" value={skills.length} />
+
                 <Stat
                     label="Streak"
                     value={
-                        <span className="flex items-center gap-1">
-                            🔥 {globalStreak} days
-                            {globalStreak > 3 && (
-                                <span className="animate-pulse text-orange-500">🔥</span>
+                        <div className="flex items-center gap-2">
+                            🔥 {streak}
+                            {freezeCount > 0 && (
+                                <span className="text-blue-400 text-sm">
+                                    ❄️ {freezeCount}
+                                </span>
                             )}
-                        </span>
+                        </div>
                     }
                 />
 
                 <Stat
                     label="Most Consistent"
-                    value={mostConsistentSkill?.name || "—"}
-                    sub={`${getConsistency(mostConsistentSkill?.logs || []).toFixed(0)}%`}
+                    value={mostConsistent?.name || "—"}
+                    sub={`${getConsistency(mostConsistent?.logs).toFixed(0)}%`}
                 />
 
-                <Stat
-                    label="Most Improved"
-                    value={mostImprovedSkill?.name || "—"}
-                    sub={`${getWeeklyImprovement(mostImprovedSkill?.logs || [])} hrs`}
-                />
+                <Stat label="XP" value={xp} />
 
             </div>
 
             {/* SKILLS */}
-            <div className="space-y-4">
-                <div className="flex justify-between">
-                    <h2>Your Skills ({skills.length})</h2>
-
-                    {skills.length > 3 && (
-                        <Link href="/skills">
-                            <Button size="sm">View all →</Button>
-                        </Link>
-                    )}
-                </div>
-
-                <div className="grid md:grid-cols-3 gap-6">
-                    {sortedSkills.slice(0, 3).map((skill: any) => (
-                        <SkillCard key={skill._id} skill={skill} />
-                    ))}
-                </div>
+            <div className="grid md:grid-cols-3 gap-6">
+                {enrichedSkills.slice(0, 3).map((skill: any) => (
+                    <SkillCard key={skill._id} skill={skill} />
+                ))}
             </div>
 
-            <SkillLevelUpCinematic
-                open={!!levelUpSkill}
-                skill={levelUpSkill?.skill}
-                level={levelUpSkill?.level}
-                xpGained={10}
-                onClose={() => setLevelUpSkill(null)}
-            />
-
-            {/* RECENT ACTIVITY */}
-            <div className="space-y-3">
-                <RecentActivity recentActivity={recentActivity} />
-            </div>
+            <RecentActivity recentActivity={recentActivity} />
 
             <LevelCard xp={xp} />
 
-            <SkillLevelUpPopup
-                skill={levelUpSkill?.skill}
-                level={levelUpSkill?.level}
-                onClose={() => setLevelUpSkill(null)}
-            />
-
             <AchievementPopup achievement={achievement} />
 
+            {/* HEATMAP */}
             <div className="flex gap-2">
-                {last7Days.map((count, i) => (
+                {last7Days.map((h, i) => (
                     <div
                         key={i}
-                        className={`w-6 h-6 rounded ${count > 20
-                            ? "bg-green-600"
-                            : count > 10
-                                ? "bg-green-400"
-                                : count > 0
-                                    ? "bg-green-200"
-                                    : "bg-gray-800"
+                        className={`w-6 h-6 rounded ${h > 10 ? "bg-green-500" : "bg-gray-700"
                             }`}
                     />
                 ))}
@@ -493,14 +279,12 @@ export default function Dashboard() {
     );
 }
 
-
 function Stat({ label, value, sub }: any) {
     return (
-        <div className="p-6 rounded-2xl border border-white/10 bg-white/5">
+        <div className="p-6 rounded-2xl border border-border bg-background">
             <p className="text-xs text-muted-foreground">{label}</p>
             <h2 className="text-xl font-bold mt-2">{value}</h2>
-            {sub && <p className="text-xs text-muted-foreground">{sub}</p>}
+            {sub && <p className="text-xs">{sub}</p>}
         </div>
     );
 }
-

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import API from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,11 +20,9 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 import { useSound } from "@/hooks/useSound";
 
-export default function AddSkill() {
-  const queryClient = useQueryClient();
+export default function AddSkill({ onCreate }: any) {
   const playSound = useSound("/sounds/level-up.mp3");
 
   const [open, setOpen] = useState(false);
@@ -42,35 +39,42 @@ export default function AddSkill() {
     try {
       setLoading(true);
 
-      await API.post("/skills", { name, level });
+      // ✅ USE MUTATION FROM PARENT
+      await onCreate({ name, level });
 
       toast.success("Skill added 🚀");
-
-      // 🔥 PLAY SOUND AFTER SUCCESS
       playSound();
 
       setName("");
       setLevel("Beginner");
       setOpen(false);
+    } catch (err: any) {
+  const status = err.response?.status;
+  const msg = err.response?.data?.message;
 
-      queryClient.invalidateQueries({ queryKey: ["skills"] });
-    } catch (err) {
-      console.log(err);
-      toast.error("Failed to add skill");
-    } finally {
-      setLoading(false);
-    }
+  if (status === 403) {
+    toast.error(
+      msg ||
+        "You’ve reached the skill limit for your current plan. Upgrade to add more."
+    );
+    // don’t log this as an error; it’s expected business logic
+    return;
+  }
+
+  console.error("Add skill error:", err);
+  toast.error(msg || "Unable to create skill right now.");
+} finally {
+  setLoading(false);
+}
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="hover:text-green-500 cursor-pointer">
-          Add Skill
-        </Button>
+        <Button>Add Skill</Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-md">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Skill</DialogTitle>
         </DialogHeader>
@@ -83,7 +87,7 @@ export default function AddSkill() {
             onChange={(e) => setName(e.target.value)}
           />
 
-          <Select value={level} onValueChange={setLevel} disabled={loading}>
+          <Select value={level} onValueChange={setLevel}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
