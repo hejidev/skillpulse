@@ -96,7 +96,7 @@ export default function ReferralDashboardPage() {
     const { user, referrals } = data;
     const referralCode = user.referralCode || "";
     const referralLink = referralCode
-        ? `${process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000" || "https://skillpulse-rho.vercel.app"}/auth/signup?ref=${referralCode}`
+        ? `${process.env.NEXT_PUBLIC_FRONTEND_URL || "https://skillpulse-rho.vercel.app"}/auth/signup?ref=${referralCode}`
         : "";
 
     const hasReferralCode = !!referralCode;
