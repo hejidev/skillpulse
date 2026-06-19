@@ -61,6 +61,8 @@ export default function AdminLayout({
   // Appearance toggle state
   const [darkMode, setDarkMode] = useState(false);
 
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
   // Initialize darkMode from stored theme
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -273,10 +275,7 @@ export default function AdminLayout({
 
           <button
             className="w-full text-left px-2 py-1 hover:bg-red-500/20 rounded text-red-400 mt-2"
-            onClick={() => {
-              logout();
-              router.push("/");
-            }}
+            onClick={() => setShowLogoutConfirm(true)}
           >
             Logout
           </button>
@@ -344,7 +343,40 @@ export default function AdminLayout({
       </aside>
 
       {/* ================= MAIN ================= */}
-      <main className="flex-1 overflow-y-auto p-8">{children}</main>
+      <main className="flex-1 overflow-y-auto p-8">{children}
+        {showLogoutConfirm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+            <div className="w-full max-w-sm rounded-2xl border border-border bg-background/95 p-6 shadow-xl">
+              <h3 className="text-base font-semibold">Sign out?</h3>
+              <p className="mt-2 text-xs text-muted-foreground">
+                You’ll need to log in again to access the admin console.
+              </p>
+
+              <div className="mt-5 flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className="cursor-pointer"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  size="sm"
+                  className="bg-red-500 hover:bg-red-600 cursor-pointer"
+                  onClick={() => {
+                    logout();
+                    setShowLogoutConfirm(false);
+                    router.push("/");
+                  }}
+                >
+                  Logout
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 }

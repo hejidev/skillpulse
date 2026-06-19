@@ -31,7 +31,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <Card className="w-100 mx-auto mt-20 p-8 space-y-4">
+    <Card className="w-100 mx-auto mt-20 p-8 space-y-4 overflow-hidden bg-background text-foreground">
       <h1 className="text-xl font-bold">Reset Password</h1>
 
       <Input
@@ -40,7 +40,20 @@ export default function ForgotPasswordPage() {
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      <Button onClick={handleSendOTP} disabled={loading} className="w-full">
+      <Button onClick={handleSendOTP} disabled={loading} className="w-full  h-12
+              rounded-xl
+              bg-linear-to-r
+              from-green-400
+              to-green-600
+              backdrop-blur-xl
+              font-bold
+              text-white
+              transition-all
+              hover:scale-[1.02]
+              hover:shadow-[0_0_30px_rgba(34,197,94,0.35)]
+              disabled:opacity-40
+              disabled:cursor-not-allowed
+              disabled:hover:scale-100">
         {loading ? "Sending OTP..." : "Send OTP"}
       </Button>
     </Card>

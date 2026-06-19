@@ -5,6 +5,9 @@ import PasswordSetting from "@/components/settings/PasswordSetting";
 import NotificationSetting from "@/components/settings/NotificationSetting";
 import ThemeSetting from "@/components/settings/ThemeSetting";
 import SecurityLogs from "@/components/SecurityLogs";
+import MFASetting from "@/components/settings/MFASetting";
+import DangerZone from "@/components/settings/DangerZone";
+
 
 import { useEffect, useState } from "react";
 import API from "@/lib/api";
@@ -22,7 +25,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import SkillSkeleton from "@/components/SkillSkeleton";
-import MFASetting from "@/components/settings/MFASetting";
 
 export default function SettingsPage() {
   const [email, setEmail] = useState(true);
@@ -290,6 +292,8 @@ transition-colors duration-300">
             <PremiumCard>
               <MFASetting />
             </PremiumCard>
+
+              <DangerZone />
 
           </div>
 

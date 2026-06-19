@@ -1,32 +1,49 @@
+// app/page.tsx
+"use client";
+
 import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
 import HowItWorks from "@/components/howItWork";
 import Features from "@/components/features";
 import CTA from "@/components/callToAction";
+import { PricingSection } from "@/components/PricingSection";
+import { useAuthContext } from "@/components/auth-provider";
 import Footer from "@/components/footer";
 import Testimonials from "@/components/Testimonials";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { user } = useAuthContext();
+  const router = useRouter();
+
+  const isAuthenticated = !!user;
+    const currentPlanId = ((user as any)?.plan || "free") as
+      | "free"
+      | "starter"
+      | "pro"
+      | "enterprise";
+
+  const handleLandingSelectPlan = (
+    planId: "free" | "starter" | "pro" | "enterprise"
+  ) => {
+    if (!isAuthenticated) {
+      router.push("/auth/login?plan=" + planId);
+      return;
+    }
+    router.push("/company/billing?plan=" + planId);
+  };
+
   return (
     <main className="bg-background text-foreground transition-colors duration-300">
       <Navbar />
       <Hero />
       <HowItWorks />
       <Features />
-      <div className="flex justify-center gap-10 mt-12 text-center">
-        <div>
-          {/* <h3 className="text-2xl font-bold">1K+</h3>
-          <p className="text-gray-400 text-sm">Active Users</p>
-        </div>
-        <div>
-          <h3 className="text-2xl font-bold">10K+</h3>
-          <p className="text-gray-400 text-sm">Skills Tracked</p>
-        </div>
-        <div>
-          <h3 className="text-2xl font-bold">95%</h3>
-          <p className="text-gray-400 text-sm">Consistency Rate</p> */}
-        </div>
-      </div>
+      <PricingSection
+        isAuthenticated={isAuthenticated}
+        currentPlanId={currentPlanId}
+        onSelectPlan={handleLandingSelectPlan}
+      />
       <Testimonials />
       <CTA />
       <Footer />

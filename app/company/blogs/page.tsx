@@ -19,6 +19,7 @@ import {
   getPublishedBlogs,
 } from "@/lib/api/blog-api";
 import PageSkeleton from "@/components/PageSkeleton";
+import Footer from "@/components/footer";
 
 export default function BlogPage() {
 
@@ -316,7 +317,7 @@ export default function BlogPage() {
         </div>
 
       </div>
-
+      <Footer />
     </div>
   );
 }

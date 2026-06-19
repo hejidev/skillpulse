@@ -106,37 +106,39 @@ export default function Navbar() {
   <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
 
     {/* ================= LOGO ================= */}
-    <Link href="/" className="group flex items-center gap-3">
-          <div
-            className="
-              w-10 h-10 rounded-2xl
-              bg-linear-to-br from-brand/40 to-brand/90
-              flex items-center justify-center
-              text-muted-foreground font-black
-              shadow-[0_0_25px_rgba(34,197,94,0.25)]
-              transition-transform duration-300
-              group-hover:scale-105
-            "
-          >
-            {appInitial}
-          </div>
+   <Link href="/" className="group flex items-center gap-3">
+  {/* Icon / logomark */}
+  <div
+    className="
+      w-10 h-10 rounded-2xl
+      bg-linear-to-br from-emerald-500/70 via-brand/70 to-brand/90
+      flex items-center justify-center
+      text-black font-black text-lg
+      shadow-[0_0_24px_rgba(16,185,129,0.45)]
+      ring-1 ring-emerald-300/50
+      transition-transform duration-300
+      group-hover:scale-105 group-hover:shadow-[0_0_30px_rgba(16,185,129,0.6)]
+    "
+  >
+    {appInitial}
+  </div>
 
-          <div>
-            <h1
-              className="
-                text-xl font-black tracking-tight
-                bg-linear-to-r from-brand/40 to-brand/90
-                bg-clip-text text-transparent
-              "
-            >
-              {appName}
-            </h1>
-
-            <p className="hidden md:block text-[10px] text-muted-foreground -mt-1">
-              Growth Intelligence
-            </p>
-          </div>
-        </Link>
+  {/* Wordmark */}
+  <div className="flex flex-col">
+    <span
+      className="
+        text-lg md:text-xl font-black tracking-tight
+        bg-linear-to-r from-emerald-300 via-emerald-400 to-teal-500
+        bg-clip-text text-transparent
+      "
+    >
+      {appName}
+    </span>
+    <span className="hidden md:block text-[10px] uppercase tracking-[0.14em] text-muted-foreground/80">
+      Growth Intelligence
+    </span>
+  </div>
+</Link>
 
     {/* ================= NAVIGATION ================= */}
     <NavigationMenu className="hidden md:flex">

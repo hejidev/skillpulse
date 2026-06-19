@@ -114,7 +114,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background px-6 py-16 text-foreground">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background text-foreground px-6 py-26">
       {/* 🌌 BACKGROUND FX */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute -top-30 -left-30 h-80 w-[320px] rounded-full bg-green-500/10 blur-3xl" />

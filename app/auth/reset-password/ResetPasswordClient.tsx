@@ -79,7 +79,7 @@ export default function ResetPasswordClient() {
   };
 
   return (
-    <Card className="w-100 mx-auto mt-20 p-8 space-y-6">
+    <Card className="w-100 mx-auto mt-20 p-8 space-y-6 overflow-hidden bg-background text-foreground">
       <div className="text-center space-y-1">
         <h1 className="text-xl font-bold">Verify OTP</h1>
         <p className="text-sm text-gray-400">
@@ -108,7 +108,21 @@ export default function ResetPasswordClient() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <Button onClick={handleReset} disabled={loading} className="w-full">
+      <Button onClick={handleReset} disabled={loading} className=" h-12
+              w-full
+              rounded-xl
+              bg-linear-to-r
+              from-green-400
+              to-green-600
+              backdrop-blur-xl
+              font-bold
+              text-white
+              transition-all
+              hover:scale-[1.02]
+              hover:shadow-[0_0_30px_rgba(34,197,94,0.35)]
+              disabled:opacity-40
+              disabled:cursor-not-allowed
+              disabled:hover:scale-100">
         {loading ? "Resetting..." : "Reset Password"}
       </Button>
     </Card>
