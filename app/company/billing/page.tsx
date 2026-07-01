@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import PageSkeleton from "@/components/PageSkeleton";
+import Footer from "@/components/footer";
 
 type PlanId = "free" | "starter" | "pro" | "enterprise";
 
@@ -173,11 +174,11 @@ export default function BillingPage() {
     }
 
     return (
-        <main className="min-h-[80vh] bg-background px-4 py-20 text-foreground">
-            <div className="mx-auto flex max-w-6xl flex-col gap-10">
+        <main className="min-h-[80vh] bg-background px-4 py-20 text-foreground space-y-10">
+            <div className="mx-auto flex max-w-7xl px-7 flex-col gap-10">
                 {/* HEADER */}
                 <section className="space-y-4">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-3 py-1 text-[11px] text-muted-foreground backdrop-blur-xl">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-3 py-1 text-[15px] text-muted-foreground backdrop-blur-xl">
                         <Sparkles className="h-3 w-3 text-primary" />
                         <span>Skill Engine Billing</span>
                     </div>
@@ -187,22 +188,22 @@ export default function BillingPage() {
                             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
                                 Power up your learning stack
                             </h1>
-                            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+                            <p className="mt-2 max-w-2xl text-md text-muted-foreground">
                                 Manage your subscription, see usage, and unlock more capacity as
                                 you level up your skills.
                             </p>
                         </div>
 
                         {me?.billing?.status && (
-                            <div className="rounded-xl border border-border bg-card/40 px-4 py-2 text-xs text-muted-foreground backdrop-blur-xl">
+                            <div className="rounded-xl border border-border/30 bg-card/40 px-4 py-2 text-sm text-muted-foreground backdrop-blur-xl">
                                 <div className="flex items-center gap-2">
                                     <Shield className="h-3 w-3 text-emerald-400" />
-                                    <span className="font-medium capitalize">
+                                    <span className="font-bold capitalize">
                                         {me.billing.status}
                                     </span>
                                 </div>
                                 {me.billing.currentPeriodEnd && (
-                                    <p className="mt-1">
+                                    <p className="mt-1 text-xs">
                                         Renews on{" "}
                                         {new Date(
                                             me.billing.currentPeriodEnd
@@ -231,12 +232,12 @@ export default function BillingPage() {
                 {/* TOP GRID: CURRENT PLAN + USAGE + INSIGHT */}
                 <section className="grid gap-6 md:grid-cols-[1.4fr,1.1fr]">
                     {/* Current plan / usage */}
-                    <Card className="relative overflow-hidden border border-border bg-card/40 p-6 backdrop-blur-xl">
-                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-emerald-500/10 opacity-80" />
+                    <Card className="relative overflow-hidden border border-border/30 bg-card/40 p-4 backdrop-blur-xl">
+                        <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-emerald-500/10 opacity-80" />
                         <div className="relative flex flex-col gap-4">
                             <div className="flex items-center justify-between gap-4">
                                 <div>
-                                    <p className="text-xs text-muted-foreground">Current plan</p>
+                                    <p className="text-sm text-muted-foreground">Current plan</p>
                                     <div className="mt-1 flex items-center gap-2">
                                         <h2 className="text-xl font-semibold capitalize">
                                             {currentPlan?.name || currentPlanId}
@@ -252,12 +253,12 @@ export default function BillingPage() {
 
                                 {currentPlan && (
                                     <div className="text-right">
-                                        <p className="text-xs text-muted-foreground">
+                                        <p className="text-sm text-muted-foreground">
                                             Billing amount
                                         </p>
                                         <p className="text-lg font-semibold">
                                             ₦{currentPlan.priceNGN.toLocaleString("en-NG")}
-                                            <span className="text-xs font-normal text-muted-foreground">
+                                            <span className="text-sm font-normal text-muted-foreground">
                                                 /{currentPlan.interval}
                                             </span>
                                         </p>
@@ -268,7 +269,7 @@ export default function BillingPage() {
                             {/* Usage bars */}
                             <div className="mt-4 grid gap-4 md:grid-cols-2">
                                 <div>
-                                    <div className="flex items-center justify-between text-xs mb-1">
+                                    <div className="flex items-center justify-between text-sm mb-1">
                                         <span>Skills used</span>
                                         <span className="text-muted-foreground">
                                             {skillsLimit
@@ -283,7 +284,7 @@ export default function BillingPage() {
                                 </div>
 
                                 <div>
-                                    <div className="flex items-center justify-between text-xs mb-1">
+                                    <div className="flex items-center justify-between text-sm mb-1">
                                         <span>Hours this month</span>
                                         <span className="text-muted-foreground">
                                             {hoursLimit
@@ -299,46 +300,46 @@ export default function BillingPage() {
                             </div>
 
                             {/* Small “intelligence” row */}
-                            <div className="mt-3 grid gap-3 text-xs md:grid-cols-3">
+                            <div className="mt-3 grid gap-3 text-sm md:grid-cols-3">
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                     <Zap className="h-3 w-3 text-primary" />
                                     <span>
-                                        Upgrade to Pro if you routinely hit your monthly hours
+                                        Upgrade your plan if you routinely hit your monthly hours
                                         limit.
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                     <Clock className="h-3 w-3 text-emerald-400" />
-                                    <span>Streak and XP systems are always active.</span>
+                                    <span className="text-md">Streak and XP systems are always active.</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                     <BarChart3 className="h-3 w-3 text-cyan-400" />
-                                    <span>More advanced analytics unlock with higher tiers.</span>
+                                    <span className="text-md">More advanced analytics unlock with higher tiers.</span>
                                 </div>
                             </div>
                         </div>
                     </Card>
 
                     {/* Plan intelligence / recommendation */}
-                    <Card className="border border-border bg-card/40 p-5 backdrop-blur-xl">
+                    <Card className="border border-border/30 bg-card/40 p-5 backdrop-blur-xl">
                         <div className="flex items-center gap-2">
                             <Sparkles className="h-4 w-4 text-primary" />
-                            <h2 className="text-sm font-semibold">Plan intelligence</h2>
+                            <h2 className="text-lg font-semibold">Plan intelligence</h2>
                         </div>
-                        <p className="mt-2 text-xs text-muted-foreground">
+                        <p className="mt-2 text-lg text-muted-foreground">
                             Based on your current usage, we recommend the plan that keeps you
                             within limits and leaves room to grow.
                         </p>
 
-                        <div className="mt-4 space-y-2 text-xs">
+                        <div className="mt-4 space-y-2 text-sm">
                             <p>
                                 • If you create many skills or log long sessions,{" "}
-                                <span className="font-medium text-primary">Pro</span> prevents
+                                <span className="font-semibold text-brand">Pro</span> prevents
                                 hitting caps.
                             </p>
                             <p>
                                 • If you&apos;re still exploring,{" "}
-                                <span className="font-medium text-emerald-400">Starter</span>{" "}
+                                <span className="font-semibold text-brand">Starter</span>{" "}
                                 balances cost with capacity.
                             </p>
                             <p>
@@ -349,14 +350,14 @@ export default function BillingPage() {
                         <Button
                             variant="outline"
                             size="sm"
-                            className="mt-4 w-full text-xs"
+                            className="mt-4 w-full text-sm border border-border/30 py-5 cursor-pointer"
                             onClick={() => {
                                 const anchor = document.getElementById("plans-grid");
                                 if (anchor) anchor.scrollIntoView({ behavior: "smooth" });
                             }}
                         >
                             Explore plans
-                            <ArrowRight className="ml-1 h-3 w-3" />
+                            <ArrowRight className="ml-1 h-4 w-4" />
                         </Button>
                     </Card>
                 </section>
@@ -368,7 +369,7 @@ export default function BillingPage() {
                             {Array.from({ length: 4 }).map((_, i) => (
                                 <Card
                                     key={i}
-                                    className="h-full animate-pulse border-border bg-card/60 p-6"
+                                    className="h-full animate-pulse border-border/30 bg-card/60 p-6"
                                 >
                                     <div className="h-4 w-20 rounded bg-muted" />
                                     <div className="mt-4 h-7 w-24 rounded bg-muted" />
@@ -396,13 +397,13 @@ export default function BillingPage() {
                                         transition={{ delay: plan.id === "free" ? 0 : 0.05 }}
                                     >
                                         <Card
-                                            className={`relative flex h-full flex-col overflow-hidden border border-border bg-card/60 p-6 backdrop-blur-xl ${isCurrent
+                                            className={`relative flex h-full flex-col overflow-hidden border border-border/30 bg-card/60 p-6 backdrop-blur-xl ${isCurrent
                                                     ? "ring-2 ring-primary/60 shadow-lg shadow-primary/20"
                                                     : ""
                                                 }`}
                                         >
                                             <div
-                                                className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${plan.id === "free"
+                                                className={`pointer-events-none absolute inset-0 bg-linear-to-br ${plan.id === "free"
                                                         ? "from-slate-700/20 via-transparent to-slate-900/40"
                                                         : plan.id === "starter"
                                                             ? "from-emerald-500/10 via-transparent to-emerald-500/20"
@@ -438,17 +439,17 @@ export default function BillingPage() {
                                                 <div>
                                                     <p className="text-2xl font-bold">
                                                         ₦{plan.priceNGN.toLocaleString("en-NG")}
-                                                        <span className="text-xs font-normal text-muted-foreground">
+                                                        <span className="text-sm font-semibold text-muted-foreground">
                                                             /{plan.interval}
                                                         </span>
                                                     </p>
                                                 </div>
 
                                                 {/* Limits */}
-                                                <div className="space-y-1 text-xs text-muted-foreground">
+                                                <div className="space-y-1 text-sm text-muted-foreground">
                                                     <p>
                                                         Skills:{" "}
-                                                        <span className="font-medium text-foreground">
+                                                        <span className="font-semibold text-foreground">
                                                             {plan.maxSkills === null
                                                                 ? "Unlimited"
                                                                 : plan.maxSkills}
@@ -456,13 +457,13 @@ export default function BillingPage() {
                                                     </p>
                                                     <p>
                                                         Levels up to:{" "}
-                                                        <span className="font-medium text-foreground">
+                                                        <span className="font-semibold text-foreground">
                                                             {plan.maxLevel}
                                                         </span>
                                                     </p>
                                                     <p>
                                                         Monthly hours:{" "}
-                                                        <span className="font-medium text-foreground">
+                                                        <span className="font-semibold text-foreground">
                                                             {plan.monthlyHoursLimit === null
                                                                 ? "Unlimited"
                                                                 : `${plan.monthlyHoursLimit} hrs`}
@@ -471,7 +472,7 @@ export default function BillingPage() {
                                                 </div>
 
                                                 {/* Perks */}
-                                                <ul className="mb-4 mt-2 flex-1 space-y-2 text-xs text-muted-foreground">
+                                                <ul className="mb-4 mt-2 flex-1 space-y-2 text-sm text-muted-foreground">
                                                     {perks.map((perk) => (
                                                         <li key={perk} className="flex items-center gap-2">
                                                             <Check className="h-3 w-3 text-primary" />
@@ -483,7 +484,7 @@ export default function BillingPage() {
                                                 {/* CTA */}
                                                 <Button
                                                     variant={isCurrent ? "outline" : "default"}
-                                                    className="w-full rounded-2xl text-xs"
+                                                    className="w-full rounded-2xl text-sm font-medium cursor-pointer"
                                                     disabled={isCurrent || !!changingPlan}
                                                     onClick={() => handleChangePlan(plan.id)}
                                                 >
@@ -511,7 +512,7 @@ export default function BillingPage() {
 
                 {/* FOOTNOTE */}
                 <section className="mt-2 flex items-start gap-2 text-xs text-muted-foreground">
-                    <Info className="mt-[2px] h-3 w-3" />
+                    <Info className="mt-0.5 h-3 w-3" />
                     <p>
                         Billing is handled securely via Paystack. You can upgrade, downgrade,
                         or cancel anytime. We&apos;ll always show your current plan and
@@ -519,6 +520,8 @@ export default function BillingPage() {
                     </p>
                 </section>
             </div>
+
+            <Footer/>
         </main>
     );
 }

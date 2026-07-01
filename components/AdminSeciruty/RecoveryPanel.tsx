@@ -3,39 +3,49 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Key, Mail, Phone } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import API from "@/lib/api";
+
+interface MfaStatus {
+  recoveryEmail?: string;
+  recoveryPhone?: string;
+  backupCodesCount: number;
+}
 
 export default function RecoveryPanel() {
+  const { data } = useQuery({
+    queryKey: ["admin-mfa-status"],
+    queryFn: () =>
+      API.get("/admin/security/mfa-status").then((r) => r.data as MfaStatus),
+  });
+
   return (
     <Card className="p-6 bg-card/40 backdrop-blur-xl border space-y-5">
-
       <h2 className="font-semibold">Account Recovery</h2>
 
       <div className="space-y-3">
-
         <RecoveryOption
           icon={<Mail size={16} />}
           title="Recovery Email"
-          desc="admin@backup.com"
+          desc={data?.recoveryEmail || "Not set"}
         />
 
         <RecoveryOption
           icon={<Phone size={16} />}
           title="Recovery Phone"
-          desc="+234 *** *** 0069"
+          desc={data?.recoveryPhone || "Not set"}
         />
 
         <RecoveryOption
           icon={<Key size={16} />}
           title="Backup Codes"
-          desc="8 unused codes available"
+          desc={`${data?.backupCodesCount ?? 0} codes available`}
         />
-
       </div>
 
       <Button className="w-full">
         Generate New Backup Codes
       </Button>
-
     </Card>
   );
 }

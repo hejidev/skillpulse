@@ -55,7 +55,7 @@ export default function PasswordSetting() {
     };
 
     return (
-        <div className="p-6 border rounded-xl bg-background text-primary space-y-4">
+        <div className="p-6 rounded-xl bg-background text-primary space-y-4">
 
             <h2 className="font-semibold">Change Password</h2>
 
@@ -64,7 +64,7 @@ export default function PasswordSetting() {
                 placeholder="Current Password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="w-full p-2 rounded border-border text-input border"
+                className="w-full p-2 rounded border-border/30 text-input border"
             />
 
             <input
@@ -72,7 +72,7 @@ export default function PasswordSetting() {
                 placeholder="New Password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full p-2 rounded border-border text-input border"
+                className="w-full p-2 rounded border-border/30 text-input border"
             />
 
             <input
@@ -80,13 +80,13 @@ export default function PasswordSetting() {
                 placeholder="Confirm New Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full p-2 rounded border-border text-input border"
+                className="w-full p-2 rounded border-border/30 text-input border"
             />
 
             <button
                 onClick={handleChangePassword}
                 disabled={loading}
-                className="px-4 py-2 border border-brand text-foreground font-semibold cursor-pointer rounded w-full disabled:opacity-50"
+                className="px-4 py-2 border border-brand/50 text-foreground font-semibold cursor-pointer rounded w-full disabled:opacity-50"
             >
                 {loading ? "Updating..." : "Update Password"}
             </button>

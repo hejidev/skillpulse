@@ -49,14 +49,14 @@ export default function GlobalSearch() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="
-          bg-white/5 
-          border-white/10 
+          bg-background 
+          border-border/20 
           backdrop-blur-xl 
           h-10 
           rounded-xl 
           px-4
           focus:ring-2 
-          focus:ring-green-500
+          focus:brand/50
         "
       />
 
@@ -71,9 +71,9 @@ export default function GlobalSearch() {
               absolute 
               w-full 
               mt-3 
-              bg-black/80 
+              bg-background/80 
               backdrop-blur-xl 
-              border border-white/10 
+              border border-border/20 
               rounded-xl 
               p-3 
               z-50 
@@ -106,13 +106,13 @@ export default function GlobalSearch() {
                   <div
                     key={s._id}
                     onClick={() => {
-                      router.push(`/skills/${s._id}`);
+                      router.push(`/dashboard/skills/${s._id}`);
                       setQuery("");
                       setResults(null);
                     }}
                     className="
                       p-2 
-                      hover:bg-white/10 
+                      hover:bg-background/10 
                       rounded-lg 
                       cursor-pointer 
                       transition
@@ -127,7 +127,7 @@ export default function GlobalSearch() {
             {/* PROGRESS */}
             {results?.progress?.length > 0 && (
               <div className="mt-3">
-                <p className="text-xs text-gray-500 mb-2 uppercase">
+                <p className="text-xs text-foreground mb-2 uppercase">
                   Progress
                 </p>
 

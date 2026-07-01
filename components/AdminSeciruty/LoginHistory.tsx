@@ -3,49 +3,53 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import API from "@/lib/api";
 
-const logs = [
-  {
-    event: "Successful Login",
-    ip: "102.89.21.11",
-    time: "10 min ago",
-    status: "safe",
-  },
-  {
-    event: "Failed Login Attempt",
-    ip: "197.210.44.10",
-    time: "1 hr ago",
-    status: "warning",
-  },
-  {
-    event: "Password Changed",
-    ip: "102.88.10.22",
-    time: "Yesterday",
-    status: "safe",
-  },
-];
+interface LoginHistoryItem {
+  event: string;
+  ip: string;
+  createdAt: string;
+  status: "safe" | "warning";
+}
 
 export default function LoginHistory() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-login-history"],
+    queryFn: () =>
+      API.get("/admin/security/login-history").then(
+        (r) => r.data as { items: LoginHistoryItem[] }
+      ),
+  });
+
+  const logs = data?.items ?? [];
+
   return (
     <Card className="p-6 bg-card/40 backdrop-blur-xl border space-y-4">
-
       <h2 className="font-semibold">Login History</h2>
 
-      {logs.map((l, i) => (
-        <div key={i} className="flex justify-between items-center border p-3 rounded-xl">
+      {isLoading && (
+        <p className="text-xs text-muted-foreground">Loading login history…</p>
+      )}
 
+      {!isLoading && !logs.length && (
+        <p className="text-xs text-muted-foreground">No recent login events.</p>
+      )}
+
+      {logs.map((l, i) => (
+        <div
+          key={i}
+          className="flex justify-between items-center border p-3 rounded-xl"
+        >
           <div>
             <p className="text-sm font-medium">{l.event}</p>
-            <p className="text-xs text-muted-foreground">
-              IP: {l.ip}
-            </p>
+            <p className="text-xs text-muted-foreground">IP: {l.ip}</p>
           </div>
 
           <div className="flex items-center gap-2">
             <Clock size={14} className="text-muted-foreground" />
-
             <span className="text-xs text-muted-foreground">
-              {l.time}
+              {new Date(l.createdAt).toLocaleString()}
             </span>
 
             <Badge
@@ -58,10 +62,8 @@ export default function LoginHistory() {
               {l.status}
             </Badge>
           </div>
-
         </div>
       ))}
-
     </Card>
   );
 }

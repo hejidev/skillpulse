@@ -24,10 +24,10 @@ export default function NotificationBell() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative">
-          <Bell />
+          <Bell/>
 
           {unread > 0 && (
-            <Badge className="absolute -top-1 -right-1 text-xs">
+            <Badge className="absolute -top-1 -right-1 text-xs w-4 h-4">
               {unread}
             </Badge>
           )}

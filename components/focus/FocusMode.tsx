@@ -153,7 +153,7 @@ export default function FocusMode({ skill, onClose }: any) {
 
 
     return (
-        <div className="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center text-white">
+        <div className="fixed inset-0 z-50 bg-brand-foreground flex flex-col items-center justify-center text-foreground">
             <div className="flex gap-2 mt-4">
                 <Button onClick={() => setSound("lofi")}>🎧 Lofi</Button>
                 <Button onClick={() => setSound("rain")}>🌧 Rain</Button>
@@ -162,13 +162,13 @@ export default function FocusMode({ skill, onClose }: any) {
             {/* CLOSE */}
             <button
                 onClick={onClose}
-                className="absolute top-6 right-6 text-gray-400 hover:text-white"
+                className="absolute top-6 right-6 text-muted-foreground hover:text-foreground"
             >
                 ✕
             </button>
 
             {/* MODE */}
-            <p className="text-sm text-gray-400 mb-2">
+            <p className="text-sm text-muted-foreground my-2">
                 {mode === "focus" ? "🎯 Focus Mode" : "☕ Break Time"}
             </p>
 
@@ -183,13 +183,13 @@ export default function FocusMode({ skill, onClose }: any) {
             </motion.h1>
 
             {/* SESSION COUNT */}
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-muted-foreground mt-2">
                 Sessions: {sessionCount}
             </p>
 
             {/* AI COACH */}
             {aiMessage && (
-                <div className="mt-6 max-w-md text-center text-sm text-gray-300 bg-white/5 border border-white/10 p-4 rounded-xl">
+                <div className="mt-6 max-w-md text-center text-sm text-muted-foreground bg-card/5 border border-border/30 p-4 rounded-xl">
                     🤖 {aiMessage}
                 </div>
             )}
@@ -220,9 +220,9 @@ export default function FocusMode({ skill, onClose }: any) {
             </div>
 
             {/* PROGRESS VISUAL */}
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-white/10">
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-card/50">
                 <motion.div
-                    className="h-full bg-indigo-500"
+                    className="h-full bg-brand-secondary"
                     initial={{ width: 0 }}
                     animate={{
                         width: `${mode === "focus"

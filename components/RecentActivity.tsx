@@ -122,7 +122,7 @@ export function RecentActivity({ recentActivity = [], liveItem, paginated = fals
     // ===============================
     if (!recentActivity.length) {
         return (
-            <div className="text-center py-16 text-gray-400">
+            <div className="text-center py-16 text-muted-foreground">
                 <p className="text-lg">No activity yet 🚀</p>
                 <p className="text-sm">Start logging your progress</p>
             </div>
@@ -135,7 +135,7 @@ export function RecentActivity({ recentActivity = [], liveItem, paginated = fals
             {/* HEADER */}
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold">Activity Feed</h2>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-muted-foreground">
                     Your learning journey
                 </p>
             </div>
@@ -155,11 +155,11 @@ export function RecentActivity({ recentActivity = [], liveItem, paginated = fals
 
                         {/* DAY HEADER */}
                         <div className="flex justify-between items-center">
-                            <h3 className="text-sm font-semibold text-gray-300">
+                            <h3 className="text-sm font-semibold text-muted-foreground">
                                 {day}
                             </h3>
 
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-muted-foreground">
                                 {getDailyTotal(items)} hrs total
                             </span>
 
@@ -180,7 +180,7 @@ export function RecentActivity({ recentActivity = [], liveItem, paginated = fals
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         transition={{ duration: 0.4 }}
                                         className={`relative rounded-2xl border p-5 transition overflow-hidden
-                                        ${isLive ? "border-green-400 shadow-lg shadow-green-500/20" : "border-white/10"}
+                                        ${isLive ? "border-brand shadow-lg shadow-green-500/20" : "border-border/30"}
                                         `}
                                     >
 
@@ -188,10 +188,10 @@ export function RecentActivity({ recentActivity = [], liveItem, paginated = fals
                                         {isLive && (
                                             <div className="absolute top-2 right-2 flex items-center gap-2">
                                                 <span className="relative flex h-3 w-3">
-                                                    <span className="animate-ping absolute h-full w-full rounded-full bg-green-400 opacity-75" />
-                                                    <span className="relative h-3 w-3 rounded-full bg-green-500" />
+                                                    <span className="animate-ping absolute h-full w-full rounded-full bg-brand opacity-75" />
+                                                    <span className="relative h-3 w-3 rounded-full bg-brand-secondary" />
                                                 </span>
-                                                <span className="text-[10px] text-green-400">LIVE</span>
+                                                <span className="text-[10px] text-brand/30">LIVE</span>
                                             </div>
                                         )}
 
@@ -204,7 +204,7 @@ export function RecentActivity({ recentActivity = [], liveItem, paginated = fals
                                             <div className="flex items-center gap-4">
 
                                                 {/* AVATAR */}
-                                                <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-black bg-linear-to-r ${getActivityColor(item.hours)}`}>
+                                                <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-foreground bg-linear-to-r ${getActivityColor(item.hours)}`}>
                                                     {item.hours}
                                                 </div>
 
@@ -213,7 +213,7 @@ export function RecentActivity({ recentActivity = [], liveItem, paginated = fals
                                                         {item.skillName || "Unknown Skill"}
                                                     </p>
 
-                                                    <p className="text-xs text-gray-400">
+                                                    <p className="text-sm text-muted-foreground">
                                                         {getActivityMessage(item.hours)}
                                                     </p>
 
@@ -232,7 +232,7 @@ export function RecentActivity({ recentActivity = [], liveItem, paginated = fals
                                                     +{item.hours} hrs
                                                 </p>
 
-                                                <p className="text-xs text-gray-500">
+                                                <p className="text-xs text-muted-foreground">
                                                     {formatDistanceToNow(
                                                         new Date(item.createdAt),
                                                         { addSuffix: true }
@@ -254,12 +254,12 @@ export function RecentActivity({ recentActivity = [], liveItem, paginated = fals
                         <Button
                             onClick={() => setPage((p: number) => Math.max(1, p - 1))}
                             disabled={page === 1}
-                            className="px-4 py-2 rounded bg-white/10 disabled:opacity-50"
+                            className="px-4 py-2 rounded bg-card/40 disabled:opacity-50"
                         >
                             Prev
                         </Button>
 
-                        <span className="text-sm text-gray-400">
+                        <span className="text-sm text-muted-foreground">
                             Page {page}
                         </span>
 
@@ -272,7 +272,7 @@ export function RecentActivity({ recentActivity = [], liveItem, paginated = fals
                     </div>
 
                     {/* 👇 MOVE IT HERE */}
-                    <p className="text-xs text-gray-400 text-center mt-2">
+                    <p className="text-xs text-muted-foreground text-center mt-2">
                         Showing {(page - 1) * pageSize + 1} -{" "}
                         {Math.min(page * pageSize, recentActivity.length)} of{" "}
                         {recentActivity.length}

@@ -135,9 +135,9 @@ export default function SessionsPage() {
     <div className="space-y-10">
 
       {/* HEADER */}
-      <div className="flex justify-between">
+      <div className="flex flex-col md:flex-row gap-5 justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Autonomous Sessions</h1>
+          <h1 className="text-xl md:text-3xl font-bold">Autonomous Sessions</h1>
           <p className="text-muted-foreground text-sm">
             Self-learning productivity engine ⚙️
           </p>
@@ -159,7 +159,7 @@ export default function SessionsPage() {
 
       {/* 🧠 SYSTEM STATE */}
       {intelligence?.behavior && (
-        <div className="p-6 border rounded-2xl bg-white/5">
+        <div className="p-6 border rounded-2xl bg-card/0">
           <p className="text-sm text-muted-foreground">System State</p>
 
           <h2 className="text-xl font-bold">
@@ -175,7 +175,7 @@ export default function SessionsPage() {
 
       {/* 🎯 ADAPTIVE ENGINE */}
       {intelligence?.adaptive && (
-        <div className="p-6 rounded-2xl border bg-gradient-to-br from-indigo-500/10 to-purple-500/10">
+        <div className="p-6 rounded-2xl border bg-linear-to-br from-indigo-500/10 to-purple-500/10">
           <p className="text-sm text-muted-foreground">
             Adaptive Engine
           </p>
@@ -225,7 +225,7 @@ export default function SessionsPage() {
 // =========================
 function Stat({ title, value }: { title: string; value: string }) {
   return (
-    <div className="p-5 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
+    <div className="p-5 rounded-2xl border border-border/50 bg-card/50 hover:bg-brand/10 transition">
       <p className="text-xs text-muted-foreground">{title}</p>
       <h2 className="text-2xl font-bold mt-2">{value}</h2>
     </div>

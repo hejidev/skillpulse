@@ -225,12 +225,12 @@ export default function CommunityPage() {
                                 className="
                   relative overflow-hidden
                   rounded-[2rem]
-                  border border-border
+                  border border-border/30
                   bg-card/40 backdrop-blur-xl
                   p-8 md:p-10
                   transition-all duration-300
                   hover:-translate-y-1
-                  hover:border-primary/20
+                  hover:border-primary/90
                 "
                             >
 

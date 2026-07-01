@@ -1,6 +1,6 @@
 export function SessionCard({ session }: any) {
   return (
-    <div className="p-5 rounded-2xl border bg-white/5 hover:bg-white/10 transition">
+    <div className="p-5 rounded-2xl border bg-card/50 hover:bg-brand/10 transition">
 
       <div className="flex justify-between items-center">
         <p className="text-xs text-muted-foreground">

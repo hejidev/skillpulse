@@ -101,7 +101,7 @@ export default function MFASetting() {
 
   return (
     <div
-      className={`p-4 rounded-2xl border bg-card/40 backdrop-blur-xl ${
+      className={`p-4 rounded-2xl bg-card/40 backdrop-blur-xl ${
         shouldHighlight ? "ring-2 ring-emerald-500" : ""
       }`}
     >

@@ -1,24 +1,65 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
+import API from "@/lib/api";
+
+interface StreamLogItem {
+  id: string;
+  action: string;
+  ip?: string;
+  severity: "info" | "warning" | "danger";
+}
 
 export default function SecurityStream() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-security-stream"],
+    queryFn: () =>
+      API.get("/admin/security/logs", {
+        params: { limit: 10 },
+      }).then(
+        (r) =>
+          r.data.data as {
+            id: string;
+            action: string;
+            ip?: string;
+            severity: "info" | "warning" | "danger";
+          }[]
+      ),
+  });
+
+  const items = data ?? [];
+
   return (
     <Card className="p-6 bg-card/40 backdrop-blur-xl border">
-
-      <h2 className="text-lg font-semibold mb-4">
-        Security Event Firehose
-      </h2>
+      <h2 className="text-lg font-semibold mb-4">Security Event Firehose</h2>
 
       <div className="space-y-3 font-mono text-xs">
+        {isLoading && (
+          <p className="text-xs text-muted-foreground">Loading events…</p>
+        )}
 
-        <Event type="BLOCKED" msg="Brute force detected" ip="102.89.11.22" />
-        <Event type="ALERT" msg="Suspicious login fingerprint" ip="185.22.10.9" />
-        <Event type="INFO" msg="Rate limit triggered" ip="41.203.55.2" />
+        {!isLoading && !items.length && (
+          <p className="text-xs text-muted-foreground">
+            No recent security events.
+          </p>
+        )}
 
+        {items.map((log) => (
+          <Event
+            key={log.id}
+            type={
+              log.severity === "danger"
+                ? "BLOCKED"
+                : log.severity === "warning"
+                ? "ALERT"
+                : "INFO"
+            }
+            msg={log.action}
+            ip={log.ip || "Unknown IP"}
+          />
+        ))}
       </div>
-
     </Card>
   );
 }

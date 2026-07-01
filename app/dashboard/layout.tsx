@@ -118,22 +118,18 @@ export default function DashboardLayout({
             {/* RIGHT */}
             <div className="flex items-center gap-2 lg:gap-3">
 
-              <div className="relative p-2 rounded-xl hover:bg-accent transition">
+              <div className="relative p-1 rounded-xl hover:bg-accent transition">
                 <NotificationBell />
               </div>
 
-              <div className="hidden sm:block">
-                {/* <AddSkill /> */}
-              </div>
-
-              <div
+              {/* <div
                 className="
                   w-9 h-9 rounded-full
                   bg-linear-to-br
                   from-green-400
                   to-emerald-600
                 "
-              />
+              /> */}
 
             </div>
 

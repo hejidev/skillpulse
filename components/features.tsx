@@ -111,7 +111,7 @@ export default function Features() {
               className="
                 group relative overflow-hidden
                 p-7 rounded-[30px]
-                border border-border
+                border border-border/30
                 bg-card/60
                 backdrop-blur-2xl
                 text-left

@@ -84,7 +84,7 @@ export default function AddProgress({ skillId }: { skillId?: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">Add Progress</Button>
+        <Button size="sm" className="bg-card text-foreground">Add Progress</Button>
       </DialogTrigger>
 
       <DialogContent>

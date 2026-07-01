@@ -148,13 +148,13 @@ export default function CoachPage() {
         <div className="relative space-y-10 p-6">
 
             {/* 🌌 GLOBAL BACKGROUND */}
-            <div className="fixed inset-0 -z-10 bg-gradient-to-br from-black via-[#050510] to-black" />
+            <div className="fixed inset-0 -z-10 bg-linear-to-br from-background via-[#050510] to-background" />
 
             {/* ================= HERO ================= */}
             <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="relative p-8 rounded-3xl border border-white/10 backdrop-blur-2xl overflow-hidden"
+                className="relative p-8 rounded-3xl border border-border/10 backdrop-blur-2xl overflow-hidden"
             >
 
                 {/* 🔥 MOOD REACTIVE BACKGROUND */}
@@ -178,7 +178,7 @@ export default function CoachPage() {
                             rotate: speaking ? [0, 10, -10, 0] : 0,
                         }}
                         transition={{ repeat: speaking ? Infinity : 0, duration: 1.2 }}
-                        className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-lg"
+                        className="w-14 h-14 rounded-full bg-linear-to-br from-brand to-border/60 flex items-center justify-center text-foreground font-bold shadow-lg"
                     >
                         AI
                     </motion.div>
@@ -207,7 +207,7 @@ export default function CoachPage() {
                 <Button
                     disabled={!aiData?.text || aiLoading || speaking}
                     onClick={() => speak(aiData)}
-                    className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:scale-[1.02] transition-all"
+                    className="w-full rounded-xl bg-linear-to-r from-brand/80 to-brand hover:scale-[1.02] transition-all text-card font-semibold"
                 >
                     {speaking ? "🔊 Coaching..." : "🔊 Activate Coach"}
                 </Button>
@@ -224,7 +224,7 @@ export default function CoachPage() {
                                     duration: 0.6,
                                     delay: i * 0.05,
                                 }}
-                                className="w-1 bg-indigo-400 rounded"
+                                className="w-1 bg-brand/40 rounded"
                             />
                         ))}
                     </div>
@@ -232,17 +232,17 @@ export default function CoachPage() {
             </motion.div>
 
             {/* ================= STATS ================= */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-white">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-brand">
 
                 <StatCard title="Total Skills" value={data.totalSkills} />
                 <StatCard title="Weekly Hours" value={`${data.totalHours}h`} />
 
                 {/* 🔥 CIRCULAR PROGRESS */}
-                <Card className="p-6 bg-white/5 text-white border border-white/10 backdrop-blur-xl flex flex-col items-center justify-center">
-                    <p className="text-xs text-gray-400 mb-2">Consistency</p>
+                <Card className="p-6 bg-card/50 text-brand border border-border/50 backdrop-blur-xl flex flex-col items-center justify-center">
+                    <p className="text-xs text-forground mb-2">Consistency</p>
 
                     <div className="relative w-24 h-24">
-                        <svg className="w-full h-full rotate-[-90deg]">
+                        <svg className="w-full h-full -rotate-90">
                             <circle
                                 cx="50%"
                                 cy="50%"
@@ -255,7 +255,7 @@ export default function CoachPage() {
                                 cx="50%"
                                 cy="50%"
                                 r="40"
-                                stroke="#6366f1"
+                                stroke="#00bf30"
                                 strokeWidth="6"
                                 fill="none"
                                 strokeDasharray={251}
@@ -266,7 +266,7 @@ export default function CoachPage() {
                             />
                         </svg>
 
-                        <div className="absolute inset-0 flex items-center justify-center text-sm font-semibold">
+                        <div className="absolute inset-0 flex items-center justify-center text-xl font-bold">
                             {Math.round(data.avgConsistency)}%
                         </div>
                     </div>
@@ -275,7 +275,7 @@ export default function CoachPage() {
 
             {/* ================= SKILLS ================= */}
             <div className="space-y-4">
-                <h3 className="text-sm text-gray-400">Skill Breakdown</h3>
+                <h3 className="text-sm text-foreground">Skill Breakdown</h3>
 
                 <div className="grid md:grid-cols-2 gap-6">
                     {data.skills.map((item: any, i: number) => (
@@ -285,13 +285,13 @@ export default function CoachPage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.05 }}
                         >
-                            <Card className="group p-5 bg-white/5 border border-white/10 backdrop-blur-xl space-y-3 hover:scale-[1.02] transition-all cursor-pointer">
+                            <Card className="group p-5 bg-card/50 border border-border/50 backdrop-blur-xl space-y-3 hover:scale-[1.02] transition-all cursor-pointer">
 
-                                <h4 className="font-semibold text-lg text-white group-hover:text-indigo-400 transition">
+                                <h4 className="font-semibold text-lg text-foreground group-hover:text-brand/80 transition">
                                     {item.skill.name}
                                 </h4>
 
-                                <div className="flex justify-between text-xs text-gray-400">
+                                <div className="flex justify-between text-xs text-foreground">
                                     <span>🔥 {item.streak} day streak</span>
                                     <span>
                                         📊 {Math.round(item.context?.consistencyScore || 0)}%
@@ -299,16 +299,16 @@ export default function CoachPage() {
                                 </div>
 
                                 {/* 🔥 MINI PROGRESS BAR */}
-                                <div className="h-2 bg-white/10 rounded overflow-hidden">
+                                <div className="h-2 bg-foreground rounded overflow-hidden">
                                     <div
-                                        className="h-full bg-indigo-500"
+                                        className="h-full bg-brand"
                                         style={{
                                             width: `${item.context?.consistencyScore || 0}%`,
                                         }}
                                     />
                                 </div>
 
-                                <div className="text-xs text-gray-500">
+                                <div className="text-xs text-muted-foreground">
                                     ⏱ {item.context?.weeklyHours || 0}h this week
                                 </div>
 
@@ -324,9 +324,9 @@ export default function CoachPage() {
 /* ================= REUSABLE ================= */
 function StatCard({ title, value }: any) {
     return (
-        <Card className="p-4 bg-white/5 border border-white/10 backdrop-blur-xl">
-            <p className="text-xs text-gray-400">{title}</p>
-            <h3 className="text-xl font-semibold text-white">{value}</h3>
+        <Card className="p-4 bg-card/50 border border-border/50 backdrop-blur-xl">
+            <p className="text-xs text-foreground">{title}</p>
+            <h3 className="text-xl font-semibold text-brand">{value}</h3>
         </Card>
     );
 }

@@ -86,7 +86,7 @@ export default function Footer() {
             </div>
 
             {/* STATS */}
-            <div className="grid grid-cols-2 gap-4 min-w-70">
+            <div className="grid grid-cols-2 gap-4 min-w-50">
 
               <div className="rounded-2xl border border-border bg-card/40 p-5 backdrop-blur-xl">
                 <h3 className="text-2xl font-bold text-green-400">

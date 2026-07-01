@@ -114,7 +114,7 @@ export default function SkillsPage() {
                 <CardContent className="p-5 space-y-4">
 
                   <div className="flex justify-between items-center">
-                    <h3 className="font-semibold text-lg text-white">
+                    <h3 className="font-semibold text-lg text-foreground">
                       {skill.name}
                     </h3>
 
@@ -129,11 +129,11 @@ export default function SkillsPage() {
                     </p>
 
                     <div className="space-y-2">
-                      <p className="text-sm font-semibold text-white">
+                      <p className="text-sm font-semibold text-muted-foreground">
                         {skill.progress}%
                       </p>
 
-                      <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-foreground rounded-full overflow-hidden">
                         <div
                           className="h-full bg-green-500 transition-all duration-500"
                           style={{ width: `${skill.progress}%` }}

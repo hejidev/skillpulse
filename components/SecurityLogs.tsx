@@ -69,16 +69,16 @@ export default function SecurityLogs() {
   const grouped = groupLogs(data);
 
   return (
-    <div className="p-6 rounded-2xl border bg-white/5 backdrop-blur-xl space-y-6">
+    <div className="p-3 rounded-2xl bg-card/5 backdrop-blur-xl space-y-6">
 
       {/* HEADER */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-start gap-3">
         <div className="p-2 rounded-lg bg-white/10">
           <Shield />
         </div>
         <div>
-          <h2 className="text-xl font-semibold">Security Center</h2>
-          <p className="text-sm text-muted-foreground">
+          <h2 className="text-[16px] sm:text-xl font-semibold">Security Center</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">
             Track devices, logins & suspicious activity
           </p>
         </div>
@@ -113,7 +113,7 @@ function LogGroup({ title, logs, setSelectedLog, logoutDevice }: any) {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm text-muted-foreground">{title}</h3>
+      <h3 className="text-xs sm:text-sm text-muted-foreground">{title}</h3>
 
       {logs.map((log: any) => {
         const config = getSeverityConfig(log.severity);
@@ -121,25 +121,25 @@ function LogGroup({ title, logs, setSelectedLog, logoutDevice }: any) {
         return (
           <div
             key={log._id}
-            className={`p-4 rounded-xl border ${config.bg}`}
+            className={`p-4 rounded-xl border border-border/30 ${config.bg}`}
           >
-            <div className="flex justify-between items-start gap-4">
+            <div className="flex justify-between items-start gap-2">
 
               <div>
-                <p className="font-medium">{log.action}</p>
+                <p className="font-medium text-xs sm:text-lg">{log.action}</p>
 
-                <p className="text-xs flex gap-2 items-center text-gray-400">
+                <p className="text-xs flex gap-2 items-center text-muted-foreground">
                   <Laptop size={14} /> {log.device}
                 </p>
 
-                <p className="text-xs flex gap-2 items-center text-gray-400">
+                <p className="text-xs flex gap-2 items-center text-muted-foreground">
                   <Globe size={14} /> {log.ip}
                 </p>
 
                 <div className="flex gap-3 mt-2">
                   <button
                     onClick={() => setSelectedLog(log)}
-                    className="text-xs text-blue-400 hover:underline cursor-pointer"
+                    className="text-[11px] sm:text-xs text-brand hover:underline cursor-pointer"
                   >
                     View Details
                   </button>
@@ -148,14 +148,14 @@ function LogGroup({ title, logs, setSelectedLog, logoutDevice }: any) {
                     onClick={() =>
                       logoutDevice.mutate(log.deviceHash)
                     }
-                    className="text-xs text-red-400 hover:underline cursor-pointer"
+                    className="text-[11px] sm:text-xs text-red-400 hover:underline cursor-pointer"
                   >
                     Log out device
                   </button>
                 </div>
               </div>
 
-              <span className="text-xs text-gray-400">
+              <span className="text-[9px] sm:text-xs text-muted-foreground">
                 {formatDistanceToNow(new Date(log.createdAt), {
                   addSuffix: true,
                 })}
@@ -171,8 +171,8 @@ function LogGroup({ title, logs, setSelectedLog, logoutDevice }: any) {
 // ================= MODAL =================
 function DetailsModal({ log, onClose }: any) {
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-      <div className="bg-black p-6 rounded-xl w-full max-w-lg space-y-4 border">
+    <div className="fixed inset-0 bg-card/70 flex items-center justify-center z-50">
+      <div className="bg-background p-6 rounded-xl w-full max-w-lg space-y-4 border">
 
         <h3 className="text-lg font-semibold">Device Details</h3>
 

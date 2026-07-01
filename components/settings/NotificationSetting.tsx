@@ -31,7 +31,7 @@ export default function NotificationSetting({
   };
 
   return (
-    <div className="p-5 border rounded-xl bg-white/5 space-y-4">
+    <div className="p-6 rounded-xl bg-card/5 space-y-4">
 
       <h2 className="font-semibold">Notifications</h2>
 

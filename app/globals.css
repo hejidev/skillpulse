@@ -154,9 +154,9 @@
   body {
     @apply bg-background text-foreground;
   }
-  html {
+  /* html {
     @apply font-sans;
-  }
+  } */
 }
 
 /* Heatmap colors (GitHub style) */
@@ -244,7 +244,22 @@ body {
   src: url(/assets/ProtestStrike-Regular.ttf);
 }
 
+@font-face {
+  font-family: Plus;
+  src: url(/assets/PlusJakartaSans-Regular.ttf);
+}
+
 h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Plus;
+  font-weight: 200;
+}
+
+/* h1,
 h2,
 h3,
 h4,
@@ -252,7 +267,7 @@ h5,
 h6 {
   font-family: Strike;
   font-weight: 200;
-}
+} */
 
 p,
 span,

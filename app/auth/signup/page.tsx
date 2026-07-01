@@ -80,6 +80,9 @@ export default function SignupPage() {
     }
   };
 
+  const SKIP_EMAIL_VERIFICATION =
+  process.env.NEXT_PUBLIC_SKIP_EMAIL_VERIFICATION === "true";
+
   const strength = getStrength(password);
 
   const isFormValid = useMemo(() => {
@@ -91,22 +94,50 @@ export default function SignupPage() {
     );
   }, [name, email, password, acceptedTerms]);
 
+  // if (success) {
+  //   return (
+  //     <Card className="w-96 mx-auto mt-20 p-6 text-center space-y-4">
+  //       <h1 className="text-xl font-bold">Check your email 📩</h1>
+
+  //       <p>
+  //         We sent a verification link to <b>{email}</b>.
+  //         Please verify your account before logging in.
+  //       </p>
+
+  //       <Button onClick={() => router.push("/auth/login")}>
+  //         Go to Login
+  //       </Button>
+  //     </Card>
+  //   );
+  // }
+
   if (success) {
-    return (
-      <Card className="w-96 mx-auto mt-20 p-6 text-center space-y-4">
-        <h1 className="text-xl font-bold">Check your email 📩</h1>
+  return (
+    <Card className="w-96 mx-auto mt-20 p-6 text-center space-y-4">
+      <h1 className="text-xl font-bold">
+        {SKIP_EMAIL_VERIFICATION ? "Account created 🎉" : "Check your email 📩"}
+      </h1>
 
-        <p>
-          We sent a verification link to <b>{email}</b>.
-          Please verify your account before logging in.
-        </p>
+      <p>
+        {SKIP_EMAIL_VERIFICATION ? (
+          <>
+            Your account has been created. You can now log in with{" "}
+            <b>{email}</b>.
+          </>
+        ) : (
+          <>
+            We sent a verification link to <b>{email}</b>. Please verify your
+            account before logging in.
+          </>
+        )}
+      </p>
 
-        <Button onClick={() => router.push("/auth/login")}>
-          Go to Login
-        </Button>
-      </Card>
-    );
-  }
+      <Button onClick={() => router.push("/auth/login")}>
+        Go to Login
+      </Button>
+    </Card>
+  );
+}
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background px-6 py-26 text-foreground">

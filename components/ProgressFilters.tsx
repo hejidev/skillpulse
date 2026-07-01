@@ -16,12 +16,12 @@ export function ProgressFilters({ setFilter, setRange }: any) {
       {/* SKILL FILTER */}
       <select
         onChange={(e) => setFilter(e.target.value)}
-        className="bg-white/5 border px-3 py-1 rounded"
+        className="bg-card border px-3 py-1 rounded  text-xs md:text-xl"
       >
         <option value="all">All Skills</option>
 
         {skills.map((skill: any) => (
-          <option key={skill._id} value={skill._id} className="text-black">
+          <option key={skill._id} value={skill._id} className="text-foreground">
             {skill.name}
           </option>
         ))}
@@ -30,11 +30,11 @@ export function ProgressFilters({ setFilter, setRange }: any) {
       {/* TIME FILTER */}
       <select
         onChange={(e) => setRange(e.target.value)}
-        className="bg-background border px-3 py-1 rounded"
+        className="bg-background border px-3 py-1 rounded text-xs md:text-xl"
       >
-        <option value="7" className="text-muted-foreground">Last 7 days</option>
-        <option value="30" className="text-muted-foreground">Last 30 days</option>
-        <option value="90" className="text-muted-foreground">Last 90 days</option>
+        <option value="7" className="text-foreground">Last 7 days</option>
+        <option value="30" className="text-foreground">Last 30 days</option>
+        <option value="90" className="text-foreground">Last 90 days</option>
       </select>
 
     </div>

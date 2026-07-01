@@ -25,18 +25,37 @@ export default function MFAControlPanel() {
     settingsLoading || !settings
       ? "Loading…"
       : settings.enforce2FA
-      ? "On"
-      : "Off";
+        ? "On"
+        : "Off";
 
   const usersWithout2FA =
     statsLoading || !mfaStats ? "…" : mfaStats.usersWithout2FA;
 
-    if (settingsLoading || !settings) {
-  return <AdminPageSkeleton />;
-}
+  if (settingsLoading || !settings) {
+    return <AdminPageSkeleton />;
+  }
 
   return (
     <Card className="p-6 bg-card/40 backdrop-blur-xl border space-y-5">
+
+      <div className="p-4 border rounded-xl flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div className="text-sm">
+          <p className="font-semibold">Your 2FA status</p>
+          <p className="text-xs text-muted-foreground">
+            Protect this admin account with an authenticator app and backup codes.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          {/* Show Enable / Manage based on twoFactorEnabled from /2fa/status */}
+          <Button size="sm" variant="outline" onClick={() => router.push("/admin/security/mfa-setup")}>
+            Configure 2FA
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => router.push("/admin/security/mfa-backup")}>
+            Backup codes
+          </Button>
+        </div>
+      </div>
+
       <div>
         <h2 className="text-xl font-semibold flex items-center gap-2">
           <ShieldCheck size={18} />

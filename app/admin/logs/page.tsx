@@ -116,7 +116,7 @@ export default function SecurityLogsOS() {
       return;
     }
     try {
-      await API.post("/admin/security/block-ip", { ip: selected.ip });
+      await API.post("/admin/security/actions/block-ip", { ip: selected.ip });
       toast.success(`IP ${selected.ip} blocked`);
       const blockedRes = await API.get("/admin/security/blocked-ips");
       setBlockedIps(blockedRes.data.data);
@@ -132,7 +132,7 @@ export default function SecurityLogsOS() {
       return;
     }
     try {
-      await API.post("/admin/security/trust-device", {
+      await API.post("/admin/security/actions/trust-device", {
         userId: selected.userId,
         deviceHash: selected.deviceHash,
         device: selected.device,
@@ -278,7 +278,7 @@ export default function SecurityLogsOS() {
           <div className="space-y-1 max-h-44 overflow-auto">
             {blockedIps.map((b) => (
               <div key={b._id} className="flex justify-between text-xs">
-                <span className="text-muted-foreground truncate max-w-[120px]">
+                <span className="text-muted-foreground truncate max-w-30">
                   {b.ip}
                 </span>
                 <span className="text-[10px] text-muted-foreground">
@@ -295,7 +295,7 @@ export default function SecurityLogsOS() {
 
           {blockedIps.map((b) => (
             <div key={b._id} className="flex justify-between items-center text-xs">
-              <span className="text-muted-foreground truncate max-w-[120px]">
+              <span className="text-muted-foreground truncate max-w-30">
                 {b.ip}
               </span>
               <div className="flex items-center gap-2">
@@ -307,7 +307,7 @@ export default function SecurityLogsOS() {
                   size="xs"
                   className="text-[10px]"
                   onClick={async () => {
-                    await API.post("/admin/security/unblock-ip", { ip: b.ip });
+                    await API.post("/admin/security/actions/unblock-ip", { ip: b.ip });
                     const blockedRes = await API.get("/admin/security/blocked-ips");
                     setBlockedIps(blockedRes.data.data);
                   }}
@@ -350,7 +350,7 @@ export default function SecurityLogsOS() {
                   size="xs"
                   className="text-[10px]"
                   onClick={async () => {
-                    await API.post("/admin/security/revoke-device", {
+                    await API.post("/admin/security/actions/revoke-device", {
                       userId: d.userId,
                       deviceHash: d.deviceHash,
                     });
@@ -402,7 +402,7 @@ export default function SecurityLogsOS() {
           <div className="space-y-1 max-h-44 overflow-auto">
             {threats.map((t, idx) => (
               <div key={idx} className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground truncate max-w-[150px]">
+                <span className="text-muted-foreground truncate max-w-37.5">
                   {t.title}
                 </span>
                 <ThreatSeverity severity={t.severity} />

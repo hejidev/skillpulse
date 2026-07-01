@@ -93,7 +93,7 @@ export function PricingSection({
           {Array.from({ length: 4 }).map((_, i) => (
             <Card
               key={i}
-              className="h-full animate-pulse border-border bg-card/60 p-6"
+              className="h-full animate-pulse border-border/30 border bg-card/60 p-6"
             >
               <div className="h-4 w-20 rounded bg-muted" />
               <div className="mt-4 h-7 w-24 rounded bg-muted" />
@@ -128,7 +128,7 @@ export function PricingSection({
                 transition={{ delay: plan.id === "free" ? 0 : 0.05 }}
               >
                 <Card
-                  className={`relative flex h-full flex-col overflow-hidden border border-border bg-card/60 p-6 backdrop-blur-xl ${
+                  className={`relative flex h-full flex-col overflow-hidden border border-border/30 bg-card/60 p-6 backdrop-blur-xl ${
                     isCurrent
                       ? "ring-2 ring-primary/60 shadow-lg shadow-primary/20"
                       : ""
@@ -183,7 +183,7 @@ export function PricingSection({
 
                     {/* CTA */}
                     <Button
-                      className="w-full rounded-2xl text-xs"
+                      className="w-full rounded-2xl text-xs bg-brand cursor-pointer text-foreground font-semibold"
                       variant={isCurrent ? "outline" : "default"}
                       disabled={isCurrent}
                       onClick={() => {

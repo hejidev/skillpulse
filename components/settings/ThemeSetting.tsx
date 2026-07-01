@@ -33,7 +33,6 @@ export default function ThemeSetting({
       className="
         relative overflow-hidden
         rounded-[28px]
-        border border-border
         bg-card/50
         backdrop-blur-2xl
         p-6
@@ -57,7 +56,7 @@ export default function ThemeSetting({
             "
           >
             {darkMode ? (
-              <MoonStar className="text-indigo-300" size={24} />
+              <MoonStar className="text-brand/30" size={24} />
             ) : (
               <Sun className="text-yellow-400" size={24} />
             )}
