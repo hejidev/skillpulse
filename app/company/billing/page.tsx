@@ -84,6 +84,12 @@ export default function BillingPage() {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
+    const planOrder: PlanId[] = ["free", "starter", "pro", "enterprise"];
+
+    const sortedPlans = [...plans].sort(
+        (a, b) => planOrder.indexOf(a.id) - planOrder.indexOf(b.id)
+    );
+
     useEffect(() => {
         const load = async () => {
             try {
@@ -384,7 +390,7 @@ export default function BillingPage() {
                         </div>
                     ) : (
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                            {plans.map((plan) => {
+                            {sortedPlans.map((plan) => {
                                 const isCurrent = currentPlanId === plan.id;
                                 const isPopular = plan.id === "pro";
                                 const perks = perksByPlan[plan.id] || [];
@@ -398,18 +404,18 @@ export default function BillingPage() {
                                     >
                                         <Card
                                             className={`relative flex h-full flex-col overflow-hidden border border-border/30 bg-card/60 p-6 backdrop-blur-xl ${isCurrent
-                                                    ? "ring-2 ring-primary/60 shadow-lg shadow-primary/20"
-                                                    : ""
+                                                ? "ring-2 ring-primary/60 shadow-lg shadow-primary/20"
+                                                : ""
                                                 }`}
                                         >
                                             <div
                                                 className={`pointer-events-none absolute inset-0 bg-linear-to-br ${plan.id === "free"
-                                                        ? "from-slate-700/20 via-transparent to-slate-900/40"
-                                                        : plan.id === "starter"
-                                                            ? "from-emerald-500/10 via-transparent to-emerald-500/20"
-                                                            : plan.id === "pro"
-                                                                ? "from-violet-500/15 via-transparent to-blue-500/20"
-                                                                : "from-amber-500/15 via-transparent to-amber-700/20"
+                                                    ? "from-slate-700/20 via-transparent to-slate-900/40"
+                                                    : plan.id === "starter"
+                                                        ? "from-emerald-500/10 via-transparent to-emerald-500/20"
+                                                        : plan.id === "pro"
+                                                            ? "from-violet-500/15 via-transparent to-blue-500/20"
+                                                            : "from-amber-500/15 via-transparent to-amber-700/20"
                                                     }`}
                                             />
                                             <div className="relative flex flex-col gap-4">
@@ -521,7 +527,7 @@ export default function BillingPage() {
                 </section>
             </div>
 
-            <Footer/>
+            <Footer />
         </main>
     );
 }
