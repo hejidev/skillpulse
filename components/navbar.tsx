@@ -254,7 +254,7 @@ export default function Navbar() {
 
         </NavigationMenu>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 ">
 
           {!user ? (
             <>
@@ -267,6 +267,7 @@ export default function Navbar() {
                 text-foreground
                 hover:bg-accent
                 hover:text-foreground
+                hidden sm:flex
               "
                 >
                   Login
@@ -282,6 +283,7 @@ export default function Navbar() {
                 hover:scale-[1.02]
                 transition-all duration-300
                 shadow-[0_0_30px_rgba(34,197,94,0.25)]
+                hidden sm:flex
               "
                 >
                   Get Started
@@ -354,7 +356,6 @@ export default function Navbar() {
           bg-card/40
           hover:bg-accent
           transition-all
-          mr-3
         "
             onClick={() => setOpen(!open)}
           >
