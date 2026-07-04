@@ -58,28 +58,28 @@ export default function ContactPage() {
 
   return (
     <>
-    <section className="relative overflow-hidden py-24 px-6 bg-background text-foreground">
+    <section className="relative overflow-hidden py-24 px-0 bg-background text-foreground">
 
       {/* GLOBAL GLOW LAYER */}
       <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-transparent blur-3xl" />
 
-      <div className="relative max-w-6xl mx-auto space-y-20">
+      <div className="relative max-w-7xl px-7 mx-auto space-y-20">
 
         {/* ================= HERO ================= */}
         <div className="text-center max-w-3xl mx-auto">
 
-          <Badge className="mb-6 px-4 py-1">
+          <Badge className="mb-6 px-4 py-2">
             Support Intelligence Center
           </Badge>
 
-          <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+          <h1 className="text-3xl md:text-6xl font-bold leading-tight">
             Talk to SkillPulse
             <span className="block text-primary">
               We Respond Fast
             </span>
           </h1>
 
-          <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
+          <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
             Whether it’s a bug, idea, collaboration, or account issue —
             our system routes your message instantly to the right team.
           </p>
@@ -92,10 +92,10 @@ export default function ContactPage() {
           {/* ===== LEFT: FORM (2 columns) ===== */}
           <motion.div className="lg:col-span-2" whileHover={{ y: -3 }}>
 
-            <Card className="relative overflow-hidden p-8 bg-card/40 backdrop-blur-xl border-border">
+            <Card className="relative overflow-hidden p-3 bg-card/40 backdrop-blur-xl border-border/50">
 
               {/* glow accent */}
-              <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute w-full inset-0 bg-linear-to-br from-primary/10 via-transparent to-transparent pointer-events-none" />
 
 
               <form className="contents relative space-y-5" onSubmit={handleSubmit}>
@@ -146,7 +146,7 @@ export default function ContactPage() {
                   <Badge className="bg-red-500/10 text-red-400">Urgent</Badge>
                 </div>
 
-                <Button className="w-full text-base font-medium" type="submit">
+                <Button className="w-full text-base text-foreground font-semibold bg-brand" type="submit">
                   Submit Support Ticket
                 </Button>
               </form>
@@ -157,13 +157,13 @@ export default function ContactPage() {
           <div className="space-y-5">
 
             {/* AI BOX */}
-            <Card className="p-5 bg-card/40 backdrop-blur-xl border-border">
+            <Card className="p-5 bg-card/40 backdrop-blur-xl border-border/30">
               <h3 className="font-semibold">🤖 AI Support Assistant</h3>
               <p className="text-sm text-muted-foreground mt-2">
                 Ask before submitting — get instant help.
               </p>
 
-              <div className="mt-4 p-3 rounded-xl bg-background border text-sm text-muted-foreground">
+              <div className="mt-4 p-3 rounded-xl bg-background border border-border/30 text-sm text-muted-foreground">
                 Try: “login issue”, “payment failed”, “reset password”
               </div>
             </Card>
@@ -180,7 +180,7 @@ export default function ContactPage() {
             </Card>
 
             {/* QUICK ACTIONS */}
-            <Card className="p-5 space-y-2 bg-card/40 backdrop-blur-xl">
+            <Card className="p-5 space-y-2 border border-border/30 bg-card/40 backdrop-blur-xl">
 
               <h3 className="font-semibold mb-2">⚡ Quick Actions</h3>
 
@@ -236,7 +236,7 @@ export default function ContactPage() {
         </div>
 
         {/* ================= FINAL CTA ================= */}
-        <Card className="p-12 text-center bg-card/40 backdrop-blur-xl">
+        <Card className="p-10 text-center bg-card/40 backdrop-blur-xl">
 
           <h2 className="text-3xl font-bold">
             Need Faster Help?
@@ -246,7 +246,7 @@ export default function ContactPage() {
             Visit our Help Center or join the community for instant answers.
           </p>
 
-          <div className="mt-6 flex justify-center gap-4">
+          <div className="mt-4 flex justify-center gap-4">
 
             <Link href="/company/help">
               <Button>Help Center</Button>

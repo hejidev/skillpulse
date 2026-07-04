@@ -59,19 +59,19 @@ export default function Footer() {
         <div className="
         relative overflow-hidden
         rounded-[32px]
-        border border-border
+        border border-border/30
         bg-card/50
         backdrop-blur-2xl
         p-8 md:p-12
       ">
 
           {/* glow */}
-          <div className="absolute inset-0 bg-linear-to-r from-green-500/10 via-purple-500/10 to-cyan-500/10" />
+          <div className="absolute inset-0 bg-linear-to-r from-green-500/10 via-brand/10 to-cyan-500/10" />
 
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
 
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-border bg-card/50 text-xs text-green-300 backdrop-blur-xl mb-4">
+              <div className="inline-flex items-center gap-2 px-4 text-center py-1 rounded-full border border-border/30 bg-card/50 text-xs text-green-300 backdrop-blur-xl mb-4">
                 ⚡ Build consistency. Track real growth.
               </div>
 
@@ -88,7 +88,7 @@ export default function Footer() {
             {/* STATS */}
             <div className="grid grid-cols-2 gap-4 min-w-50">
 
-              <div className="rounded-2xl border border-border bg-card/40 p-5 backdrop-blur-xl">
+              <div className="rounded-2xl border border-border/30 bg-card/40 p-3 backdrop-blur-xl">
                 <h3 className="text-2xl font-bold text-green-400">
                   24/7
                 </h3>
@@ -98,7 +98,7 @@ export default function Footer() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-border bg-card/40 p-5 backdrop-blur-xl">
+              <div className="rounded-2xl border border-border/30 bg-card/40 p-3 backdrop-blur-xl">
                 <h3 className="text-2xl font-bold text-purple-400">
                   AI
                 </h3>
@@ -108,7 +108,7 @@ export default function Footer() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-border bg-card/40 p-5 backdrop-blur-xl">
+              <div className="rounded-2xl border border-border/30 bg-card/40 p-3 backdrop-blur-xl">
                 <h3 className="text-2xl font-bold text-cyan-400">
                   Goals
                 </h3>
@@ -118,7 +118,7 @@ export default function Footer() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-border bg-card/40 p-5 backdrop-blur-xl">
+              <div className="rounded-2xl border border-border/30 bg-card/40 p-3 backdrop-blur-xl">
                 <h3 className="text-2xl font-bold text-yellow-400">
                   Growth
                 </h3>
@@ -145,7 +145,7 @@ export default function Footer() {
       w-10 h-10 rounded-2xl
       bg-linear-to-br from-emerald-500/70 via-brand/70 to-brand/90
       flex items-center justify-center
-      text-black font-black text-lg
+      text-foreground font-black text-lg
       shadow-[0_0_24px_rgba(16,185,129,0.45)]
       ring-1 ring-emerald-300/50
       transition-transform duration-300
@@ -184,7 +184,7 @@ export default function Footer() {
                 key={i}
                 className="
                 w-11 h-11 rounded-xl
-                border border-border
+                border border-border/30
                 bg-white/5
                 hover:bg-white/10
                 hover:border-green-500/30
@@ -322,7 +322,7 @@ export default function Footer() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-border bg-card/40 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full rounded-xl border border-border/30 bg-card/40 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
             <button
               type="submit"
@@ -353,9 +353,9 @@ export default function Footer() {
             <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
 
             Crafted by{" "}
-            <span className="text-green-500 font-medium">
+            <Link href='/https://hejidev.vercel.app/' className="text-green-500 font-medium">
               HejiDev
-            </span>
+            </Link>
 
           </div>
 

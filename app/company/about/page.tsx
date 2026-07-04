@@ -140,7 +140,7 @@ export default function PublicAboutPage() {
               )}
 
               <div className="space-y-3">
-                <h1 className="text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">
+                <h1 className="text-xl font-bold leading-tight md:text-3xl lg:text-4xl">
                   {about.heroTitle}
                 </h1>
 
@@ -165,20 +165,20 @@ export default function PublicAboutPage() {
               </motion.div>
             )}
                 {about.heroSubtitle && (
-                  <p className="text-lg font-medium text-primary">
+                  <p className="text-[15px] sm:text-lg font-medium text-primary">
                     {about.heroSubtitle}
                   </p>
                 )}
               </div>
 
-              <p className="max-w-xl text-sm text-muted-foreground">
+              <p className="max-w-xl text-[15px] sm:text-lg text-muted-foreground">
                 Built for ambitious learners, teams, and creators who want an
                 intelligence-grade skill engine—not just another course
                 catalog.
               </p>
 
               {/* Stats row */}
-              <div className="grid gap-4 text-sm sm:grid-cols-3">
+              <div className="grid gap-4 text-sm sm:text-lg sm:grid-cols-3">
                 {about.companyFounded && (
                   <HeroStat label="Founded" value={about.companyFounded} />
                 )}
@@ -198,19 +198,19 @@ export default function PublicAboutPage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.25 }}
-            className="grid gap-10 rounded-3xl border border-border bg-card/40 p-8 backdrop-blur-xl lg:grid-cols-[1.4fr,1fr]"
+            className="grid gap-10 rounded-3xl backdrop-blur-xl lg:grid-cols-[1.4fr,1fr]"
           >
             <motion.div variants={fadeInUp} className="space-y-4">
               {about.storyTitle && (
-                <h2 className="text-2xl font-semibold">{about.storyTitle}</h2>
+                <h2 className="text-2xl font-semibold uppercase">{about.storyTitle}</h2>
               )}
               {about.storyContent && (
-                <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                <p className="whitespace-pre-line text-[15px] sm:text-lg leading-relaxed text-muted-foreground">
                   {about.storyContent}
                 </p>
               )}
 
-              <div className="grid gap-4 pt-4 text-sm md:grid-cols-2">
+              <div className="grid gap-4 pt-4 text-[15px] sm:text-lg md:grid-cols-2">
                 {about.mission && (
                   <MiniCard
                     icon={<Target className="h-4 w-4 text-primary" />}
@@ -234,7 +234,7 @@ export default function PublicAboutPage() {
               about.founderImage) && (
               <motion.div
                 variants={fadeInUp}
-                className="space-y-4 border-l border-border/60 pl-6"
+                className="space-y-4"
               >
                 <div className="flex items-center gap-4">
                   {about.founderImage && (
@@ -262,10 +262,10 @@ export default function PublicAboutPage() {
                 </div>
 
                 {about.founderMessage && (
-                  <Card className="border-border bg-card/60 p-5 text-sm text-muted-foreground backdrop-blur-xl">
+                  <Card className="text-sm text-muted-foreground bg-transparent border border-border/0 backdrop-blur-xl">
                     <div className="flex gap-3">
                       <Quote className="mt-1 h-4 w-4 text-primary" />
-                      <p className="leading-relaxed">{about.founderMessage}</p>
+                      <p className="leading-relaxed text-lg bg-transparent">{about.founderMessage}</p>
                     </div>
                   </Card>
                 )}
@@ -296,7 +296,7 @@ export default function PublicAboutPage() {
                         variants={fadeInUp}
                         transition={{ delay: i * 0.05 }}
                       >
-                        <Card className="border-border bg-card/60 p-4 backdrop-blur-xl transition hover:-translate-y-1 hover:border-primary/40 hover:bg-card/80">
+                        <Card className="border-border/30 bg-card/60 p-4 backdrop-blur-xl transition hover:-translate-y-1 hover:border-primary/40 hover:bg-card/80">
                           <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
                             {stat.title}
                           </p>
@@ -324,9 +324,9 @@ export default function PublicAboutPage() {
                         variants={fadeInUp}
                         transition={{ delay: i * 0.05 }}
                       >
-                        <Card className="h-full border-border bg-card/60 p-4 backdrop-blur-xl transition hover:-translate-y-1 hover:border-primary/40 hover:bg-card/80">
+                        <Card className="h-full border-border/30 bg-card/60 p-4 backdrop-blur-xl transition hover:-translate-y-1 hover:border-primary/40 hover:bg-card/80">
                           <p className="text-sm font-medium">{v.title}</p>
-                          <p className="mt-2 text-xs text-muted-foreground">
+                          <p className="mt-2 text-sm text-muted-foreground">
                             {v.description}
                           </p>
                         </Card>
@@ -352,19 +352,19 @@ export default function PublicAboutPage() {
                 label="Moments that shaped our journey"
                 badge="Timeline"
               />
-              <ol className="relative space-y-6 border-l border-border pl-4">
+              <ol className="relative space-y-6 border-l border-border/30 pl-4">
                 {about.timeline.map((item, i) => (
                   <motion.li
                     key={i}
                     variants={fadeInUp}
                     className="space-y-1"
                   >
-                    <div className="absolute -left-2.25 mt-1 h-3 w-3 rounded-full border border-primary bg-background" />
+                    <div className="absolute -left-2.25 mt-1 h-3 w-3 rounded-full border border-border/30 bg-background" />
                     <p className="text-xs uppercase tracking-wide text-primary">
                       {item.year}
                     </p>
                     <p className="text-sm font-medium">{item.title}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-lg text-muted-foreground">
                       {item.description}
                     </p>
                   </motion.li>
@@ -394,13 +394,13 @@ export default function PublicAboutPage() {
                     variants={fadeInUp}
                     transition={{ delay: i * 0.05 }}
                   >
-                    <Card className="flex h-full flex-col gap-3 border-border bg-card/60 p-4 backdrop-blur-xl transition hover:-translate-y-1 hover:border-primary/40 hover:bg-card/80">
+                    <Card className="flex h-full flex-col gap-3 border-border/30 p-4 backdrop-blur-xl transition hover:-translate-y-1 hover:border-primary/40 hover:bg-card/80">
                       <div className="flex items-center gap-3">
                         {member.image && (
                           <img
                             src={member.image}
                             alt={member.name}
-                            className="h-10 w-10 rounded-full border border-border bg-background object-cover"
+                            className="h-10 w-10 rounded-full border border-border/30 bg-background object-cover"
                           />
                         )}
                         <div>
@@ -448,7 +448,7 @@ export default function PublicAboutPage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.25 }}
-            className="rounded-3xl border border-border bg-card/60 p-12 text-center backdrop-blur-xl"
+            className="rounded-3xl border border-border/30 bg-card/60 p-5 text-center backdrop-blur-xl"
           >
             <h2 className="text-3xl font-bold md:text-4xl">
               Turn skill building into a real advantage
@@ -457,7 +457,7 @@ export default function PublicAboutPage() {
               Join ambitious builders using our platform to learn faster, ship
               better, and unlock new opportunities.
             </p>
-            <div className="mt-8 flex justify-center gap-4">
+            <div className="mt-8 flex justify-center gap-4 flex-col sm:flex-row sm:items-center">
               <Button className="rounded-2xl px-8 py-4 text-sm md:text-base">
                 Start learning now
               </Button>
@@ -478,7 +478,7 @@ export default function PublicAboutPage() {
 
 function HeroStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-border bg-card/60 px-4 py-3 backdrop-blur-xl">
+    <div className="rounded-2xl border border-border/30 bg-card/60 px-4 py-3 backdrop-blur-xl">
       <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
         {label}
       </p>
@@ -521,7 +521,7 @@ function MiniCard({
   body: string;
 }) {
   return (
-    <Card className="border-border bg-card/60 p-4 backdrop-blur-xl">
+    <Card className="border-border/30 bg-card/60 p-4 backdrop-blur-xl">
       <div className="mb-2 flex items-center gap-2">
         <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary">
           {icon}

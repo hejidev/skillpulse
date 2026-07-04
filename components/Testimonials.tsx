@@ -264,7 +264,7 @@ export default function Testimonials() {
     <section
       className="
         relative overflow-hidden
-        py-24 px-6
+        py-0 px-5
         text-foreground
       "
     >
@@ -285,7 +285,7 @@ export default function Testimonials() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <h2 className="text-4xl md:text-5xl font-black tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight">
             Loved by people serious about growth
           </h2>
 
@@ -295,7 +295,7 @@ export default function Testimonials() {
           </p>
         </motion.div>
 
-        <div className="mt-20">
+        <div className="mt-10">
 
           <Carousel
             setApi={setApi}
@@ -391,7 +391,7 @@ export default function Testimonials() {
                       <div className="relative z-10 flex flex-col h-full">
 
                         {/* Stars */}
-                        <div className="mb-5 flex gap-1">
+                        <div className="mb-2 flex gap-1">
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
@@ -407,7 +407,7 @@ export default function Testimonials() {
                   flex-1
                   text-sm leading-relaxed
                   text-muted-foreground
-                  mb-8
+                  mb-3
                 "
                         >
                           "{testimonial.quote}"

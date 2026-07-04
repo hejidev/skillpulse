@@ -82,7 +82,7 @@ export default function BlogPage() {
             SkillPulse Insights
           </Badge> */}
 
-          <h1 className="text-6xl md:text-8xl font-black tracking-tight leading-none">
+          <h1 className="text-4xl md:text-8xl text-foreground font-black tracking-tight leading-none">
 
             Learn.  Build.
             <br />
@@ -93,7 +93,7 @@ export default function BlogPage() {
 
           </h1>
 
-          <p className="mt-8 text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-5 text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Engineering, design, product growth,
             AI, startup stories and deep technical
             insights from builders shaping the future.
@@ -105,9 +105,9 @@ export default function BlogPage() {
 
         {featured && (
 
-          <div className="mb-24">
+          <div className="mb-1">
 
-            <Card className="overflow-hidden border-white/10 bg-card/40 backdrop-blur-2xl">
+            <Card className="overflow-hidden border-border/30 bg-card/40 backdrop-blur-2xl">
 
               {/* <div className="grid lg:grid-cols-2"> */}
 
@@ -123,7 +123,7 @@ export default function BlogPage() {
 
                 <div className="absolute inset-0 bg-linear-to-t from-background/80 via-foreground/20 to-transparent" />
 
-                <Badge className="absolute top-6 left-6 bg-cyan-500 text-white border-0">
+                <Badge className="absolute top-6 left-6 bg-cyan-500 text-foreground border-0">
                   Featured Story
                 </Badge>
 
@@ -131,9 +131,9 @@ export default function BlogPage() {
 
               {/* CONTENT */}
 
-              <div className="p-10 lg:p-14 flex flex-col justify-center">
+              <div className="p-1 lg:px-4 lg:py-10 flex flex-col justify-center">
 
-                <div className="flex flex-wrap gap-3 mb-6">
+                <div className="flex flex-wrap gap-3 mb-2">
 
                   <Badge
                     variant="outline"
@@ -207,11 +207,11 @@ export default function BlogPage() {
 
         )}
 
-        <div className="flex items-center gap-4 my-20">
+        <div className="flex items-center gap-4 mt-20 mb-5">
 
           <div className="h-px flex-1 bg-border" />
 
-          <span className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
+          <span className="text-sm uppercase tracking-[0.3em] text-foreground">
             Latest Stories
           </span>
 
@@ -225,7 +225,7 @@ export default function BlogPage() {
 
           <div>
 
-            <h2 className="text-4xl font-black">
+            <h2 className="text-4xl font-foreground text-foreground">
               Latest Articles
             </h2>
 
@@ -247,7 +247,7 @@ export default function BlogPage() {
               className="group"
             >
 
-              <Card className="overflow-hidden h-full border bg-card/40 backdrop-blur-xl hover:border-cyan-500/30 transition-all duration-500 hover:-translate-y-2">
+              <Card className="overflow-hidden h-full border border-border/30 bg-card/40 backdrop-blur-xl hover:border-cyan-500/30 transition-all duration-500 hover:-translate-y-2">
 
                 <div className="relative overflow-hidden">
 

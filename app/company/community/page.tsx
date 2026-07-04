@@ -84,19 +84,18 @@ export default function CommunityPage() {
     return (
         <>
             <section className="relative overflow-hidden py-24 px-6 bg-background text-foreground">
-                <div className="flex items-center justify-between p-3 mb-5 rounded-xl border border-border bg-card/40 backdrop-blur-xl">
+                <div className="max-w-6xl mx-auto flex items-center justify-between p-3 mb-5 rounded-xl border border-border bg-card/40 backdrop-blur-xl">
 
-                    <div className="flex items-center gap-2 ">
-                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                        <span className="text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2 text-center">
+                        <span className="w-2 h-2 rounded-full  bg-green-500 animate-pulse" />
+                        <span className="text-xs sm:text-sm  text-muted-foreground">
                             Live Community Activity
                         </span>
                     </div>
 
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-xs sm:text-sm text-center text-muted-foreground">
                         2,451 online • 87 new today
                     </div>
-
                 </div>
                 {/* BACKGROUND GLOW */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-225 h-225 bg-primary/10 blur-3xl rounded-full pointer-events-none" />
@@ -118,21 +117,21 @@ export default function CommunityPage() {
                             Global Learning Community
                         </div>
 
-                        <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+                        <h1 className="text-3xl md:text-5xl font-bold leading-tight">
                             Grow Together.
                             <span className="block text-primary">
                                 Learn Beyond Limits.
                             </span>
                         </h1>
 
-                        <p className="mt-8 text-lg md:text-xl text-muted-foreground leading-relaxed">
+                        <p className="mt-3 text-md md:text-xl text-muted-foreground leading-relaxed">
                             SkillPulse Community brings together developers, creators,
                             learners, designers, and ambitious minds building consistency,
                             skills, and meaningful growth together.
                         </p>
 
                         {/* ACTIONS */}
-                        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
+                        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-5">
 
                             <button
   className="px-4 py-3 rounded-2xl bg-primary text-primary-foreground opacity-80 cursor-not-allowed"
@@ -169,7 +168,7 @@ export default function CommunityPage() {
                                 className="
                 relative overflow-hidden
                 rounded-3xl
-                border border-border
+                border border-border/30
                 bg-card/40 backdrop-blur-xl
                 p-4 text-center
               "
@@ -194,15 +193,15 @@ export default function CommunityPage() {
                     </div>
 
                     {/* COMMUNITY GROUPS */}
-                    <div className="mt-28">
+                    <div className="mt-20">
 
                         <div className="text-center max-w-2xl mx-auto mb-16">
 
-                            <h2 className="text-4xl md:text-5xl font-bold">
+                            <h2 className="text-3xl md:text-5xl font-bold">
                                 Explore Communities
                             </h2>
 
-                            <p className="mt-5 text-muted-foreground text-lg leading-relaxed">
+                            <p className="mt-3 text-muted-foreground text-lg leading-relaxed">
                                 Discover focused spaces designed for collaboration,
                                 learning, accountability, and inspiration.
                             </p>
@@ -241,15 +240,15 @@ export default function CommunityPage() {
                                         {/* TOP */}
                                         <div className="flex items-start justify-between gap-5">
 
-                                            <div className="flex items-start gap-5">
+                                            <div className="flex items-start gap-2 sm:gap-5">
 
                                                 <div
                                                     className={`
-                          w-16 h-16 rounded-3xl
+                          w-14 h-14 rounded-3xl
                           border ${community.border}
                           bg-background/40
                           flex items-center justify-center
-                          text-3xl
+                          text-xl
                         `}
                                                 >
                                                     {community.icon}
@@ -261,7 +260,7 @@ export default function CommunityPage() {
                                                         {community.members}
                                                     </p>
 
-                                                    <h3 className="text-2xl font-bold">
+                                                    <h3 className="text-xl sm:text-2xl font-bold">
                                                         {community.title}
                                                     </h3>
 
@@ -271,7 +270,7 @@ export default function CommunityPage() {
 
                                             <div className="
                       px-3 py-1 rounded-full
-                      border border-border
+                      border border-border/50
                       text-xs text-muted-foreground
                     ">
                                                 {community.id}
@@ -280,15 +279,15 @@ export default function CommunityPage() {
                                         </div>
 
                                         {/* CONTENT */}
-                                        <p className="mt-8 text-muted-foreground leading-relaxed">
+                                        <p className="mt-5 text-muted-foreground leading-relaxed">
                                             {community.description}
                                         </p>
 
                                         {/* FOOTER */}
-                                        <div className="mt-10 flex items-center justify-between gap-5">
+                                        <div className="mt-6 flex items-center justify-between gap-5">
 
                                             <button
-                                                className="px-4 py-3 rounded-2xl bg-primary text-primary-foreground opacity-80 cursor-not-allowed"
+                                                className="px-4 py-3 rounded-2xl bg-brand text-primary-foreground opacity-80 cursor-not-allowed"
                                             >
                                                 Community Coming Soon
                                             </button>
@@ -296,7 +295,7 @@ export default function CommunityPage() {
                                             <button
                                                 className="
     px-4 py-3 rounded-2xl
-    border border-border
+    border border-border/30
     bg-card/40 backdrop-blur-xl
     opacity-80 cursor-not-allowed
   "
@@ -315,11 +314,11 @@ export default function CommunityPage() {
                     </div>
 
                     {/* FEATURES */}
-                    <div className="mt-28 max-w-7xl px-0 sm:px-7">
+                    <div className="mt-17 sm:mt-22 max-w-7xl px-0 sm:px-7">
 
-                        <div className="text-center max-w-2xl mx-auto mb-16">
+                        <div className="text-center max-w-2xl mx-auto mb-10">
 
-                            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold">
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">
                                 Why Join SkillPulse Community?
                             </h2>
 
@@ -338,9 +337,9 @@ export default function CommunityPage() {
                                     className="
                   relative overflow-hidden
                   rounded-3xl
-                  border border-border
+                  border border-border/30
                   bg-card/40 backdrop-blur-xl
-                  p-8
+                  p-4
                   transition-all duration-300
                   hover:-translate-y-1
                 "
@@ -351,11 +350,11 @@ export default function CommunityPage() {
                                     <div className="relative">
 
                                         <div className="
-                    w-16 h-16 rounded-3xl
+                    w-14 h-14 rounded-3xl
                     bg-primary/10
                     border border-primary/20
                     flex items-center justify-center
-                    text-3xl
+                    text-xl
                     mb-6
                   ">
                                             {feature.icon}
@@ -379,11 +378,11 @@ export default function CommunityPage() {
 
                     {/* CTA */}
                     <div className="
-          mt-28 relative overflow-hidden
+          mt-25 relative overflow-hidden
           rounded-[2.5rem]
-          border border-border
+          border border-border/30
           bg-card/40 backdrop-blur-xl
-          p-12 md:p-20
+          p-5 md:p-15
           text-center
         ">
 
@@ -392,24 +391,24 @@ export default function CommunityPage() {
                         <div className="relative max-w-3xl mx-auto">
 
                             <div className="
-              w-24 h-24 rounded-[2rem]
+              w-20 h-20 rounded-[2rem]
               bg-primary/10
               border border-primary/20
               flex items-center justify-center
-              text-5xl
+              text-4xl
               mx-auto mb-10
             ">
                                 🌍
                             </div>
 
-                            <h2 className="text-2xl md:text-6xl font-bold leading-tight">
+                            <h2 className="text-2xl md:text-5xl font-bold leading-tight">
                                 Build Consistency
                                 <span className="block text-primary">
                                     With People Like You.
                                 </span>
                             </h2>
 
-                            <p className="mt-5 text-sm md:text-lg text-muted-foreground leading-relaxed">
+                            <p className="mt-3 text-sm md:text-lg text-muted-foreground leading-relaxed">
                                 Join a premium network of learners and creators focused
                                 on discipline, accountability, productivity, and long-term growth.
                             </p>
@@ -419,7 +418,7 @@ export default function CommunityPage() {
                                 <button
                                     className="
                   px-4 py-3 rounded-2xl
-                  bg-primary text-primary-foreground
+                  bg-brand text-primary-foreground
                   font-medium
                   text-sm md:text-xl
                   transition-all duration-300
@@ -432,7 +431,7 @@ export default function CommunityPage() {
                                 <button
                                     className="
                   px-8 py-4 rounded-2xl
-                  border border-border
+                  border border-border/30
                   bg-background/40
                   hover:bg-accent
                   transition-all duration-300
