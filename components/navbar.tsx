@@ -297,7 +297,7 @@ export default function Navbar() {
                 href="/dashboard/notifications"
                 className="
               relative p-2.5 rounded-xl
-              border border-border
+              border border-border/30
               bg-card/40
               hover:bg-accent
               transition-all duration-300
@@ -313,7 +313,7 @@ export default function Navbar() {
                   min-w-4.5 h-4.5
                   px-1 rounded-full
                   bg-green-500
-                  text-black
+                  text-foreground
                   text-[10px]
                   font-bold
                   flex items-center justify-center
@@ -385,15 +385,15 @@ export default function Navbar() {
               exit={{ x: "100%", opacity: 0 }}
               transition={{ type: "tween", duration: 0.25 }}
               className="fixed inset-y-0 right-0 z-40 w-4/5 max-w-xs md:hidden
-                 bg-background border-l border-border backdrop-blur-xl
+                 bg-background border-l border-border/30 backdrop-blur-xl
                  shadow-[0_0_40px_rgba(0,0,0,0.45)]"
             >
-              <div className="h-16 flex items-center justify-between px-6 border-b border-border">
+              <div className="h-16 flex items-center justify-between px-6 border-b border-border/30">
                 <span className="text-sm font-semibold text-muted-foreground">
                   Menu
                 </span>
                 <button
-                  className="p-2 rounded-lg border border-border bg-card/60 text-xs"
+                  className="p-2 rounded-lg border border-border/30 bg-card/60 text-xs"
                   onClick={() => setOpen(false)}
                 >
                   <X/>
@@ -440,7 +440,7 @@ export default function Navbar() {
                       Contact
                     </Link>
 
-                    <div className="pt-2 flex gap-2">
+                    <div className="pt-0 flex gap-2 flex-col w-full justify-start items-start">
                       <Link href="/auth/login" onClick={() => setOpen(false)}>
                         <Button variant="ghost" className="w-full rounded-xl">
                           Login

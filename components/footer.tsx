@@ -353,7 +353,7 @@ export default function Footer() {
             <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
 
             Crafted by{" "}
-            <a href='https://hejidev.vercel.app/' className="text-green-500 font-medium">
+            <a href='https://hejidev.vercel.app/' target="_blank" className="text-green-500 font-medium">
               HejiDev
             </a>
 
