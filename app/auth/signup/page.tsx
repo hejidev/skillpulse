@@ -160,7 +160,7 @@ export default function SignupPage() {
       overflow-hidden
       rounded-[32px]
       border
-      border-border/50
+      border-border/40
       bg-card/70
       backdrop-blur-2xl
       shadow-[0_0_60px_rgba(34,197,94,0.08)]
@@ -169,7 +169,7 @@ export default function SignupPage() {
         {/* ✨ Glow */}
         <div className="absolute inset-0 bg-linear-to-br from-green-500/5 via-transparent to-purple-500/5" />
 
-        <div className="relative p-8 space-y-6">
+        <div className="relative p-2 space-y-6">
 
           {/* 🔥 HEADER */}
           <div className="text-center space-y-3">
@@ -201,9 +201,10 @@ export default function SignupPage() {
               disabled={loading}
               onChange={(e) => setName(e.target.value)}
               className="
+              mt-1
               h-12
               rounded-xl
-              border-border/60
+              border-border/40
               bg-background/40
               backdrop-blur-xl
               focus-visible:ring-2
@@ -223,9 +224,10 @@ export default function SignupPage() {
               disabled={loading}
               onChange={(e) => setEmail(e.target.value)}
               className="
+              mt-1
               h-12
               rounded-xl
-              border-border/60
+              border-border/40
               bg-background/40
               backdrop-blur-xl
               focus-visible:ring-2
@@ -249,9 +251,10 @@ export default function SignupPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="
+                mt-1
                   h-12
                   rounded-xl
-                  border-border/60
+                  border-border/40
                   bg-background/40
                   pr-12
                   backdrop-blur-xl

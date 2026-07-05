@@ -139,9 +139,9 @@ export default function LoginPage() {
         {/* ✨ Glow */}
         <div className="absolute inset-0 bg-linear-to-br from-green-500/5 via-transparent to-purple-500/5" />
 
-        <div className="relative p-8 space-y-6">
+        <div className="relative p-2 space-y-6">
           {/* 🔥 HEADER */}
-          <div className="text-center space-y-3">
+          <div className="text-center space-y-2">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-green-500/20 bg-green-500/10 backdrop-blur-xl">
               <div className="h-6 w-6 rounded-full bg-linear-to-r from-green-400 to-purple-400" />
             </div>
@@ -158,7 +158,7 @@ export default function LoginPage() {
           </div>
 
           {/* 📩 EMAIL */}
-          <div className="space-y-2">
+          <div className="space-y-4">
             <label className="text-sm font-medium">Email Address</label>
 
             <Input
@@ -167,9 +167,10 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="
+              mt-1
                 h-12
                 rounded-xl
-                border-border/60
+                border-border/40
                 bg-background/40
                 backdrop-blur-xl
                 focus-visible:ring-2
@@ -179,7 +180,7 @@ export default function LoginPage() {
           </div>
 
           {/* 🔒 PASSWORD */}
-          <div className="space-y-2">
+          <div className="space-y-4">
             <label className="text-sm font-medium">Password</label>
 
             <div className="relative">
@@ -190,9 +191,10 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="
+                mt-1
                   h-12
                   rounded-xl
-                  border-border/60
+                  border-border/40
                   bg-background/40
                   pr-12
                   backdrop-blur-xl
@@ -255,7 +257,7 @@ export default function LoginPage() {
               to-green-600
               backdrop-blur-xl
               font-bold
-              text-white
+              text-foreground
               transition-all
               hover:scale-[1.02]
               hover:shadow-[0_0_30px_rgba(34,197,94,0.35)]
